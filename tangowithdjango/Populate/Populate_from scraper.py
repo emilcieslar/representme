@@ -4,9 +4,13 @@ This will delete all tables and populate the following tables:
 Law, Topic, Party, Constituency, MSP, MSPVote,
 '''
 
+
 import csv
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tangowithdjango.settings")
+import django
+
+django.setup()
 from representME.models import *
 from data import *
 from dateutil import parser
