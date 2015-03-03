@@ -58,16 +58,24 @@ WSGI_APPLICATION = 'tangowithdjango.wsgi.application'
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'AwesomeDB',
-        'USER':'Tango',
-        'PASSWORD': 'tangowithdjango',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
-    }
+        'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'AwesomeDB'),
+        }
 }
 
+'''  " for postgres
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'm_14_2168879m',
+        'USER':'m_14_2168879m',
+        'PASSWORD': '2168879m',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '5432',
+    }
+}
+'''
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
