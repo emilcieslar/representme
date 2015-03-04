@@ -31,10 +31,10 @@ topic_extracter_location = 'scraper.report_scraper'
 topic_extracter_name = '.topic_extracter'
 
 # change here the number of msps
-number_of_msps = 129
+number_of_msps = 128
 
 # change here for location of scraped divisions
-divisions_location = settings.PROJECT_PATH+'/scraper/report_scraper/new_data/'
+divisions_location = settings.PROJECT_PATH + '\\tangowithdjango\\scraper\\report_scraper\\new_data\\'
 
 # change here to only get subset of divisions
 startdate = '02 June 2011'          # first meeting of new parliament       -- 2 June 2011

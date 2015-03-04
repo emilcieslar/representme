@@ -3,10 +3,20 @@ from django.db import models
 # Create your models here.
 
 class Law(models.Model):
+    CARRIED = 1
+    DEFEATED = 2
+
+    RESULTS = (
+        (CARRIED, 'Carried'),
+        (DEFEATED, 'Defeated')
+    )
+
     name = models.CharField(max_length=15, unique=True)
     text = models.TextField()
     topic = models.CharField(max_length=128)
     score = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    date = models.DateField(null=True)
+    result = models.CharField(max_length=1, choices=RESULTS, null=True)
 
     def __unicode__(self):
         return self.name
