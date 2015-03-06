@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from representME.models import Law
+from representME.models import Law,User
 
 # Create your views here.
 def index(request):
@@ -19,3 +19,15 @@ def law(request, law_name_slug):
         pass
 
     return render(request, 'representME/law.html', context_dict)
+
+def user(request, username):
+    context_dict = {}
+
+    try:
+        #userObj = User.objects.get(username=username)
+
+        context_dict['user'] = "";
+    except User.DoesNotExist:
+        pass
+
+    return render(request, 'representME/index-logged.html', context_dict)
