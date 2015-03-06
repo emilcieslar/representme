@@ -1,0 +1,112 @@
+/* MOBILE STYLES */
+@media only screen and (max-width: 40em) {
+
+    .header {
+        margin-top: 0;
+    }
+
+    .header .menu {
+        display: none;
+        clear: both;
+        width: 100%;
+        background: white;
+        position: absolute;
+        top: 60px;
+        left: 0;
+    }
+
+        .header .menu li {
+            clear: both;
+            width: 100%;
+        }
+
+        .link, .login-link, .header .menu-icon {
+            text-align: left;
+        }
+
+        .login-link {
+            background-position: 95% 22px;
+            padding-right: 48px;
+        }
+
+    .header .menu-icon {
+        display: block;
+    }
+
+    .index-search-wrapper input[type=text] {
+        margin-left: 5%;
+    }
+
+    .main-motto {
+        font-size: 50px;
+        line-height: 58px;
+        margin: 30px 0 0 5%;
+    }
+
+    .index-registration h3 {
+        margin: 30px 0 0 5%;
+    }
+
+    .are-you-msp a {
+        float: none;
+        font-size: 16px;
+    }
+
+    .are-you-msp span {
+        color: #3498db;
+    }
+
+    .login-form {
+        width: 100%;
+        position: relative;
+        top: auto;
+    }
+
+    .bottom-containers {
+        margin-top: 0;
+    }
+
+        .latest-laws-wrapper {
+            margin-top: 20px;
+        }
+
+    .content-inner {
+        margin: 10px 0 0 0;
+        width: 100%;
+    }
+
+        .content-inner .content-inner-header {
+            background: white;
+        }
+
+            .content-inner .content-inner-header .tag {
+                width: 90%;
+                text-align: center;
+            }
+
+            .content-inner .content-inner-header .right-side {
+                clear: both;
+                float: left;
+                width: 100%;
+                margin: 20px 0;
+            }
+
+                .content-inner .content-inner-header .right-side div {
+                    width: 40%;
+                    margin: 0 10px 0 10px;
+                    float: left;
+                }
+
+    .search input[type=text] {
+        margin: 0;
+    }
+
+    .textarea textarea {
+        width: 90%;
+    }
+
+    .textarea input[type=submit] {
+        width: 10%;
+    }
+
+}
