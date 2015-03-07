@@ -7,12 +7,12 @@ def index(request):
 
     return render(request,'representME/index.html', context_dict)
 
-def law(request, law_name_slug):
+def law(request, law_name):
     context_dict = {}
 
     try:
         # instead of name it should be slug, but our db doesn't have a slug yet
-        law = Law.objects.get(name=law_name_slug)
+        law = Law.objects.get(name=law_name)
 
         context_dict['law'] = law;
     except Law.DoesNotExist:
