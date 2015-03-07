@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -54,12 +55,12 @@ class Constituency(models.Model):
     def __unicode__(self):
         return self.name
 
-class User(models.Model):
-    username = models.CharField(max_length=128, unique=True)
-    password = models.CharField(max_length=50, unique=True)
+class UserProfile(models.Model):
+    # This line is required. Links UserProfile to a User model instance.
+    user = models.OneToOneField(User)
+
     postcode = models.CharField(max_length=8)
     msptype = models.BooleanField(default=False)
-    email = models.CharField(max_length=128, null=True)
 
     def __unicode__(self):
         return self.username
