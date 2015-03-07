@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_bg %}{% endblock %}
+{% block bg_index %}<div class="index-bg"></div>{% endblock %}
+
+{% block body_block %}
+
+    <div class="row">
+
+        <div class="large-6 medium-6 small-12 columns">
+            <h2 class="main-motto">DOES<br />
+                YOUR MSP<br />
+                REPRESENT<br />
+                YOU?</h2>
+            <div class="index-search-wrapper">
+                <input type="text" name="search" placeholder="Search for Laws, MSPs, ..." />
+                <input type="submit" name="submit-search" value="" />
+            </div>
+        </div>
+
+        <div class="large-5 medium-5 small-12 index-registration columns">
+            <h3>Sign up</h3>
+            <div class="registration-form">
+
+                <input name="email" placeholder="Email address" type="text" />
+                <input name="username" placeholder="Username" type="text" />
+                <input name="password" placeholder="Password" type="password" />
+                <input name="postcode" placeholder="Postcode" type="text" />
+
+                <input name="submit-registration" value="Sign up" type="submit" />
+
+            </div><!-- .registration-form -->
+        </div>
+
+    </div><!-- row containing registration and main motto -->
+
+    <div class="row are-you-msp">
+        <div class="large-5 medium-5 small-12 columns">
+            <span>Are you an MSP?</span>
+        </div>
+        <div class="large-7 medium-7 small-12 columns">
+            <a href="#">Engage with your constituents &rarr;</a>
+        </div>
+    </div><!-- row containing are you an msp question -->
+
+    <div class="row bottom-containers">
+        <div class="large-6 medium-6 small-12 columns">
+            <div class="row">
+                <div class="large-11 medium-11 small-12 latest-laws-wrapper columns">
+                    <div class="latest-laws-header">Latest laws</div>
+                    <div class="latest-laws-wrapper-inner">
+                        <div class="latest-law">
+                            <h3>Name of the law &nbsp;&nbsp;<span>Traffic</span></h3>
+                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
+                        </div><!-- .latest-law -->
+                        <div class="latest-law">
+                            <h3>Name of the law &nbsp;&nbsp;<span>Traffic</span></h3>
+                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
+                        </div><!-- .latest-law -->
+                        <div class="latest-law">
+                            <h3>Name of the law &nbsp;&nbsp;<span>Traffic</span></h3>
+                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
+                        </div><!-- .latest-law -->
+                        <div class="latest-law">
+                            <h3>Name of the law &nbsp;&nbsp;<span>Traffic</span></h3>
+                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
+                        </div><!-- .latest-law -->
+                    </div><!-- .latest-laws-wrapper-inner -->
+                </div><!-- .latest-laws-wrapper -->
+            </div><!-- row containing latest laws -->
+        </div><!-- column containing latest laws -->
+        <div class="large-6 medium-6 small-12 columns">
+            <div class="row">
+                <div class="large-offset-1 large-11 medium-offset-1 medium-11 small-12 latest-laws-wrapper columns">
+                    <div class="latest-laws-header">Latest comments</div>
+                    <div class="latest-laws-wrapper-inner">
+                        <div class="latest-law">
+                            <h3>Karl Marks &nbsp;&nbsp;<span>26/2/2015 (14:30)</span></h3>
+                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
+                        </div><!-- .latest-law -->
+                        <div class="latest-law">
+                            <h3>Carol Steward &nbsp;&nbsp;<span>26/2/2015 (14:25)</span></h3>
+                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
+                        </div><!-- .latest-law -->
+                        <div class="latest-law">
+                            <h3>Mike Tense &nbsp;&nbsp;<span>26/2/2015 (14:20)</span></h3>
+                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
+                        </div><!-- .latest-law -->
+                        <div class="latest-law">
+                            <h3>Carol Steward &nbsp;&nbsp;<span>26/2/2015 (14:25)</span></h3>
+                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
+                        </div><!-- .latest-law -->
+                    </div><!-- .latest-laws-wrapper-inner -->
+                </div><!-- .latest-laws-wrapper -->
+            </div><!-- row containing latest comments -->
+        </div><!-- column containing latest comments -->
+    </div><!-- row containing latest laws and latest comments -->
+
+{% endblock %}
