@@ -136,6 +136,6 @@ class Comment(models.Model):
     text = models.TextField()
 
     def __unicode__(self):
-        return self.title
+        return self.text
 
 

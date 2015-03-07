@@ -1,12 +1,16 @@
 from django.shortcuts import render
-from representME.models import Law
-from representME.forms import UserForm, UserProfileForm
+from representME.models import Law, Comment
+from representME.forms import UserForm, UserProfileForm, LawCommentForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
+
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
+
     context_dict = {}
 
     context_dict['user_form'] = UserForm()
@@ -20,9 +24,14 @@ def law(request, law_name):
     try:
 
         law = Law.objects.get(name=law_name)
+        comments = Comment.objects.order_by('-time').filter(law=law)
 
         context_dict['law'] = law;
         context_dict['law_result'] = law_result(law)
+        context_dict['commentForm'] = LawCommentForm()
+        context_dict['comments'] = comments
+        context_dict['comments_number'] = comments.count()
+
 
     except Law.DoesNotExist:
         pass
@@ -64,9 +73,9 @@ def user(request, username):
     context_dict = {}
 
     try:
-        #userObj = User.objects.get(username=username)
+        userObj = User.objects.get(username=username)
 
-        context_dict['user'] = "";
+        context_dict['user'] = userObj;
     except User.DoesNotExist:
         pass
 

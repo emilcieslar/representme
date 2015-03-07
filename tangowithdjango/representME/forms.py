@@ -2,7 +2,7 @@ __author__ = 'emilcieslar'
 
 from django import forms
 from django.contrib.auth.models import User
-from representME.models import UserProfile
+from representME.models import UserProfile, Comment
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), label="", help_text="")
@@ -19,3 +19,10 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('postcode',)
+
+class LawCommentForm(forms.ModelForm):
+    text = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Add your message here...'}), label="", help_text="")
+
+    class Meta:
+        model = Comment
+        fields = ('text',)
