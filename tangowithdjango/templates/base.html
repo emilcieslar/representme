@@ -24,20 +24,25 @@
     <div class="row">
 
         <div class="header">
-            <a href="representME/index.html" id="logo">Represent me</a>
+            <a href="{% url 'index' %}" id="logo">Represent me</a>
 
             <div class="menu-icon"></div>
             <ul class="menu">
-                <li><a href="/laws/" class="link">Laws</a></li>
+                <li><a href="{% url 'laws' %}" class="link">Laws</a></li>
                 <li><a href="/msps/" class="link">MSPs</a></li>
                 <li><a href="/about/" class="link">About</a></li>
                 <li>
-                    <div class="login-link">Login</div>
+                    <div class="login-link">{% if user.is_authenticated %}{{ user.username }}{% else %}Login{% endif %}</div>
                     <div class="login-form">
-                        <input type="text" name="login" placeholder="Username or email" />
-                        <input type="password" name="password" placeholder="Password" />
-                        <input type="submit" name="submit-login" value="Log in" />
+                        {% if user.is_authenticated %}
+                            <a href="logout.html">Logout</a>
+                        {% else %}
+                            <input type="text" name="login" placeholder="Username or email" />
+                            <input type="password" name="password" placeholder="Password" />
+                            <input type="submit" name="submit-login" value="Log in" />
+                        {% endif %}
                     </div><!-- login-form -->
+
                 </li>
             </ul><!-- .menu -->
 
