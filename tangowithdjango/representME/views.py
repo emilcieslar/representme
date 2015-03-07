@@ -9,16 +9,27 @@ def index(request):
 
 def law(request, law_name):
     context_dict = {}
-
+    print law_name
     try:
-        # instead of name it should be slug, but our db doesn't have a slug yet
+
         law = Law.objects.get(name=law_name)
 
         context_dict['law'] = law;
+        context_dict['law_result'] = law_result(law)
+
     except Law.DoesNotExist:
         pass
 
     return render(request, 'representME/law.html', context_dict)
+
+def law_result(law):
+    if law.result == "1":
+        return "Carried"
+    elif law.result == "0":
+        return "Refused"
+    else:
+        return "None"
+
 
 def user(request, username):
     context_dict = {}

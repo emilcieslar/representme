@@ -10,7 +10,7 @@
         <div class="breadcrumbs-wrapper">
             <li><a href="#">Home</a></li>
             <li><a href="laws.html">Laws</a></li>
-            <li>Name of the law</li>
+            <li>{{ law.name }}</li>
         </div><!-- .breadcrumbs-wrapper -->
 
         <div class="index-search-wrapper search">
@@ -21,8 +21,8 @@
         <div class="content-inner">
 
             <div class="content-inner-header">
-                <h2>Name of the law</h2>
-                <div class="tag">Traffic</div>
+                <h2>{{ law.name }}</h2>
+                <div class="tag">{{ law.topic }}</div>
                 <div class="tag upcoming">Upcoming</div>
 
                 <div class="right-side">
@@ -35,12 +35,7 @@
 
                 <div class="row">
                     <div class="large-6 medium-6 small-12 columns">
-                        <p>That the Parliament welcomes the report of the Working Together Review Group;
-                            recognises that well-rewarded and sustained employment, progressive workplace policies and
-                            innovation provide the best route out of poverty and the best way to tackle inequality and boost
-                            productivity; supports the review group's prioritisation of capacity building, dialogue,
-                            shared commitment and real opportunities for unions, employees and employers to work together,
-                            and endorses the decision to establish a fair work convention.</p>
+                        <p>{{ law.text }}</p>
                     </div><!-- column holding a description of a law -->
 
                     <div class="large-5 medium-5 small-12 columns">
@@ -60,7 +55,7 @@
                             <div class="large-4 medium-4 small-12 columns">
                                 <div class="col">
                                     <h4>Result</h4>
-                                    <div>Carried</div>
+                                    <div>{{ law_result }}</div>
                                 </div><!-- col -->
                             </div>
                         </div><!-- row holding a table -->
