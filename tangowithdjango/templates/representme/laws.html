@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block body_block %}
+
+    <div class="row main-content">
+
+        <div class="breadcrumbs-wrapper">
+            <li><a href="#">Home</a></li>
+            <li>Laws</li>
+        </div><!-- .breadcrumbs-wrapper -->
+
+        <div class="index-search-wrapper search">
+            <input type="text" name="search" placeholder="Search for Laws, MSPs, ..." />
+            <input type="submit" name="submit-search" value="" />
+        </div><!-- .search -->
+
+        <div class="content-inner">
+
+            <table class="laws-table">
+                {% if laws %}
+
+                    <tr>
+                        <th>Name of the law</th>
+                        <th>Topic</th>
+                        <th>Date</th>
+                        <th>Result</th>
+                    </tr>
+
+                    {% for law in laws %}
+
+                        <tr data-href="{% url 'law' law.name %}">
+                            <td>{{ law.name }}</td>
+                            <td>{{ law.topic }}</td>
+                            <td>{{ law.date }}</td>
+                            <td>{{ law.result }}</td>
+                        </tr>
+
+                    {% endfor %}
+
+                {% endif %}
+            </table>
+
+        </div><!-- .content-inner -->
+
+    </div><!-- row containing main content with white transparent background -->
+
+{% endblock %}

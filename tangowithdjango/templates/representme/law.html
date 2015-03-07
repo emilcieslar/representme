@@ -42,14 +42,19 @@
                         <div class="row vote-table">
                             <div class="large-4 medium-4 small-12 columns">
                                 <div class="col">
-                                    <h4>Your vote</h4>
-                                    <div class="your-vote no"></div>
+                                    {% if user.is_authenticated %}
+                                        <h4>Your vote</h4>
+                                        <div class="your-vote {{ user.vote }}"></div>
+                                    {% else %}
+                                        <h4>Log in to vote</h4>
+                                        <div class="your-vote"></div>
+                                    {% endif %}
                                 </div><!-- col -->
                             </div>
                             <div class="large-4 medium-4 small-12 columns">
                                 <div class="col">
                                     <h4>Date</h4>
-                                    <div>26/2/2015</div>
+                                    <div>{{ law.date }}</div>
                                 </div><!-- col -->
                             </div>
                             <div class="large-4 medium-4 small-12 columns">
@@ -104,34 +109,39 @@
         <div class="large-12 small-12 columns comments">
             <div class="comments-header">
                 <div class="left">
-                    Comments &nbsp;<span>22</span>
+                    Comments &nbsp;<span>{{ comments_number }}</span>
                 </div>
-                <div class="right">Commeting as Leif Bacardi<!--<a href="#">Log in</a> to comment--></div>
+                <div class="right">
+                    {% if user.is_authenticated %}
+                    Commeting as {{ user.username }}
+                    {% else %}
+                    <a href="#">Log in</a> to comment
+                    {% endif %}
+                </div>
             </div>
             <div class="textarea">
-                <textarea name="comment-text" placeholder="Add your message here..."></textarea>
-                <input type="submit" name="send-comment" value="" />
+                <form id="comment_form" method="post" action="/representME/add_comment/">
+                    {% csrf_token %}
+                    {{ commentForm.text }}
+                    <!--<textarea name="comment-text" placeholder="Add your message here..."></textarea>-->
+                    <input type="submit" name="send-comment" value="" />
+                </form>
             </div><!-- .textarea -->
             <div class="latest-laws-wrapper-inner">
-                <div class="latest-law">
-                    <h3>Karl Marks &nbsp;&nbsp;<span>26/2/2015 (14:30)</span></h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed maximus est luctus consectetur ultricies. Vivamus quis dui eu est blandit auctor. Vivamus libero erat, convallis a egestas a, sollicitudin id odio. Nulla vitae mauris eu dolor vestibulum rutrum. </p>
-                </div><!-- .latest-law -->
-                <div class="latest-law">
-                    <h3>Carol Steward &nbsp;&nbsp;<span>26/2/2015 (14:25)</span></h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed maximus est luctus consectetur ultricies. Vivamus quis dui eu est blandit auctor. Vivamus libero erat, convallis a egestas a, sollicitudin id odio. Nulla vitae mauris eu dolor vestibulum rutrum. </p>
-                </div><!-- .latest-law -->
-                <div class="latest-law">
-                    <h3>Mike Tense &nbsp;&nbsp;<span>26/2/2015 (14:20)</span></h3>
-                    <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
-                </div><!-- .latest-law -->
-                <div class="latest-law">
-                    <h3>Carol Steward &nbsp;&nbsp;<span>26/2/2015 (14:25)</span></h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed maximus est luctus consectetur ultricies. Vivamus quis dui eu est blandit auctor.
-                        Vivamus libero erat, convallis a egestas a, sollicitudin id odio. Nulla vitae mauris eu dolor vestibulum rutrum. Lorem ipsum dolor sit amet,
-                        consectetur adipiscing elit. Sed maximus est luctus consectetur ultricies. Vivamus quis dui eu est blandit auctor. Vivamus libero erat, convallis a egestas a,
-                        sollicitudin id odio. Nulla vitae mauris eu dolor vestibulum rutrum. </p>
-                </div><!-- .latest-law -->
+                {% if comments %}
+                    {% for comment in comments %}
+
+                        <div class="latest-law">
+                            <h3>{{ comment.user }} &nbsp;&nbsp;<span>{{ comment.time }}</span></h3>
+                            <p>{{ comment.text }}</p>
+                        </div><!-- .latest-law -->
+
+                    {% endfor %}
+                {% else %}
+                    <div class="latest-law">
+                        <p>No comments added yet, be the first to comment!</p>
+                    </div><!-- .latest-law -->
+                {% endif %}
             </div><!-- .latest-laws-wrapper-inner -->
         </div>
     </div><!-- row containing discussion -->
