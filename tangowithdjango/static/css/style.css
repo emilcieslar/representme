@@ -54,6 +54,10 @@ input[type="url"], input[type="color"], input[type="submit"], textarea {
     background-size: cover;
 }
 
+table tr.even, table tr.alt, table tr:nth-of-type(even) {
+    background: #d1e6f4;
+}
+
 /** END OF GENERAL STYLES **/
 
 
@@ -226,6 +230,10 @@ input[type="url"], input[type="color"], input[type="submit"], textarea {
         padding: 0 5%;
         font-size: 18px;
         font-family: 'Montserrat', sans-serif;
+    }
+
+    .registration-form .error input {
+        background: #f3a59d;
     }
 
     .registration-form input[type=submit] {
@@ -725,4 +733,27 @@ input[type="url"], input[type="color"], input[type="submit"], textarea {
     .comments .latest-laws-wrapper-inner {
         overflow: hidden;
         max-height: none;
+    }
+
+/* ################################## LIST OF LAWS ######################################## */
+.laws-table {
+    width: 100%;
+}
+
+    .laws-table tr th {
+        color: #3498db;
+        font-weight: 700;
+        font-size: 18px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .laws-table tr td {
+        color: #3498db;
+        cursor: pointer;
+    }
+
+    .laws-table tr:hover td {
+        background: #3498db;
+        color: white;
     }

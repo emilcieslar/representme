@@ -24,4 +24,12 @@ $(document).ready(function() {
     // Set height for .msp-wrap .vote (it's absolutely positioned
     $('.msp-wrap .vote').height($('.msp-wrap').height()-$('.msp-wrap h6').height());
 
+    // Make a tr in a laws list a link
+    $('.laws-table tr').click(function() {
+        if($(this).data('href') !== undefined)
+        {
+            document.location = $(this).data('href');
+        }
+    });
+
 });

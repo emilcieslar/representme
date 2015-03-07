@@ -63,7 +63,7 @@ class UserProfile(models.Model):
     msptype = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.username
+        return self.user.username
 
 
 class UserVote(models.Model):

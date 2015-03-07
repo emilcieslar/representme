@@ -3,6 +3,7 @@ from representME.models import Law
 from representME.forms import UserForm, UserProfileForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
@@ -15,7 +16,7 @@ def index(request):
 
 def law(request, law_name):
     context_dict = {}
-    print law_name
+
     try:
 
         law = Law.objects.get(name=law_name)
@@ -36,7 +37,29 @@ def law_result(law):
     else:
         return "None"
 
+def laws_result(laws):
+    for law in laws:
+        if law.result == "1":
+            law.result = "Carried"
+        elif law.result == "0":
+            law.result = "Refused"
+        else:
+            law.result = "None"
+    return laws
 
+def laws(request):
+    context_dict = {}
+
+    try:
+        laws = Law.objects.order_by('-date')
+        context_dict['laws'] = laws_result(laws)
+
+    except:
+        pass
+
+    return render(request, 'representME/laws.html', context_dict)
+
+@login_required
 def user(request, username):
     context_dict = {}
 
@@ -86,6 +109,8 @@ def register(request):
 
             # Update our variable to tell the template registration was successful.
             registered = True
+
+            return HttpResponseRedirect('/representME/user/'+user.username+'/')
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
