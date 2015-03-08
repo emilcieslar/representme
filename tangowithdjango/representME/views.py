@@ -32,8 +32,8 @@ def law(request, law_name):
 
         votes = UserVote.objects.filter(law=law)
 
-        context_dict['votes_for'] = votes.objects.filter(vote=UserVote.YES)
-        context_dict['votes_against'] = votes.objects.filter(vote=UserVote.NO)
+        context_dict['votes_for'] = votes.filter(vote=UserVote.YES)
+        context_dict['votes_against'] = votes.filter(vote=UserVote.NO)
         context_dict['law'] = law
         # this should be taken care of in the template, the information is already in the law
         # context_dict['law_result'] =  law_result(law)
