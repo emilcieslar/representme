@@ -36,6 +36,16 @@ def index(request):
     context_dict['user_form'] = UserForm()
     context_dict['profile_form'] = UserProfileForm()
 
+    # you need request.user to access the django user stuff
+    if request.user.is_authenticated():
+        # you use this to get the Userprofile data associated with this user
+        this_user = UserProfile.objects.get(user=request.user)
+        user_msps = get_msps(this_user.postcode)
+    else:
+        user_msps = {}
+
+    context_dict['user_msps'] = user_msps
+
     return render(request,'representME/index.html', context_dict)
 
 def law(request, law_name):
@@ -133,12 +143,13 @@ def get_msps(postcode):
         return regions
 
     print regions
-    msps = {}
+    msps = []
     for item in regions:
-        print regions[item][0]
         const = Constituency.objects.filter(name=regions[item][0])
         for c in const:
-            msps[regions[item][0]] = MSP.objects.filter(constituency=c.id)
+            msps_const = MSP.objects.filter(constituency=c.id)
+            for msp in msps_const:
+                msps.append(msp)
     return msps
 
 
