@@ -23,11 +23,11 @@
             <div class="content-inner-header">
                 <h2>{{ law.name }}</h2>
                 <div class="tag">{{ law.topic }}</div>
-                <div class="tag upcoming">Upcoming</div>
+                <div class="tag upcoming">{{ upcoming }}</div>
 
                 <div class="right-side">
-                    <div class="against number">30</div>
-                    <div class="approve number">20</div>
+                    <div class="against number">{{ votes_against }}</div>
+                    <div class="approve number">{{ votes_for }}</div>
                 </div><!-- .right -->
             </div><!-- .content-inner-header -->
 
