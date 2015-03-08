@@ -8,11 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>REPRESENT ME</title>
     <link rel="stylesheet" href="{% static "css/foundation.min.css" %}" type="text/css" media="screen" />
-    <script src="js/vendor/modernizr.js"></script>
+    <script src="{% static "js/vendor/modernizr.js" %}"></script>
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css' />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" media="screen" />
-    <link rel="stylesheet" href="{% static "css/style640-1024" %}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{% static "css/style640-1024.css" %}" type="text/css" media="screen" />
     <link rel="stylesheet" href="{% static "css/style640.css" %}" type="text/css" media="screen" />
 </head>
 
@@ -29,7 +29,7 @@
             <div class="menu-icon"></div>
             <ul class="menu">
                 <li><a href="{% url 'laws' %}" class="link">Laws</a></li>
-                <li><a href="/msps/" class="link">MSPs</a></li>
+                <li><a href="{% url 'msps' %}" class="link">MSPs</a></li>
                 <li><a href="/about/" class="link">About</a></li>
                 <li>
                     <div class="login-link">{% if user.is_authenticated %}{{ user.username }}{% else %}Login{% endif %}</div>

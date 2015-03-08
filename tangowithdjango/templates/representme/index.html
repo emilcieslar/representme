@@ -29,6 +29,7 @@
                     {% for field in user_form %}
                         {% if field.errors %}
                             <div class="error">
+                                <div>{{ field.errors.as_text }}</div>
                         {% endif %}
                         {{ field }}
                         {% if field.errors %}
@@ -40,6 +41,7 @@
 
                         {% if field.errors %}
                             <div class="error">
+                                <div>{{ field.errors.as_text }}</div>
                         {% endif %}
 
                         {{ field }}
