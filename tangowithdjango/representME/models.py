@@ -75,7 +75,6 @@ class UserVote(models.Model):
     law = models.ForeignKey(Law)
     voted = models.BooleanField(default=False)
     vote_for = models.BooleanField(default=False)
-    vote_against = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s %s' % (self.user.username, self.law)
