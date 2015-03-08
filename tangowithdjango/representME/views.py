@@ -30,12 +30,13 @@ def law(request, law_name):
         law = Law.objects.get(name=law_name)
         comments = Comment.objects.order_by('-time').filter(law=law)
 
-        votes = UserVote.objects.get(law=law)
+        votes = UserVote.objects.filter(law=law)
 
-        context_dict['votes_for'] = votes_for(votes)
-        context_dict['votes_against'] = votes_against(votes)
+        context_dict['votes_for'] = votes.objects.filter(vote=UserVote.YES)
+        context_dict['votes_against'] = votes.objects.filter(vote=UserVote.NO)
         context_dict['law'] = law
-        context_dict['law_result'] = law_result(law)
+        # this should be taken care of in the template, the information is already in the law
+        # context_dict['law_result'] =  law_result(law)
         context_dict['commentForm'] = LawCommentForm()
         context_dict['comments'] = comments
         context_dict['comments_number'] = comments.count()
@@ -119,24 +120,8 @@ def get_msps(postcode):
             msps[regions[item][0]] = MSP.objects.filter(constituency=c.id)
     return msps
 
-#function to return the number of votes for, takes a list of votes corresponding to a given law
-#and returns the number of votes in favour
-def votes_for(votes):
-    votes_for = 0
-    for vote in votes:
-        if vote.vote == "1":
-            votes_for += 1
-    return votes_for
 
-#function to return the number of votes against, takes a list of votes corresponding to a given laq
-#and returns the number of votes against it
-def votes_against(votes):
-    votes_against = 0
-    for vote in votes:
-        if vote.vote == "2":
-            votes_against += 1
-    return votes_against
-
+''' this is redundant
 def law_result(law):
     if law.result == "1":
         return "Carried"
@@ -144,7 +129,8 @@ def law_result(law):
         return "Refused"
     else:
         return "None"
-
+'''
+'''this is just wrong
 def laws_result(laws):
     for law in laws:
         if law.result == "1":
@@ -154,13 +140,14 @@ def laws_result(laws):
         else:
             law.result = "None"
     return laws
+'''
 
 def laws(request):
     context_dict = {}
 
     try:
         laws = Law.objects.order_by('-date')
-        context_dict['laws'] = laws_result(laws)
+        context_dict['laws'] = laws
 
     except:
         pass
