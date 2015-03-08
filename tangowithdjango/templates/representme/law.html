@@ -60,7 +60,14 @@
                             <div class="large-4 medium-4 small-12 columns">
                                 <div class="col">
                                     <h4>Result</h4>
-                                    <div>{{ law_result }}</div>
+
+                                    <div>
+                                        {% if law.result == '1' %}
+                                            Carried
+                                        {% else %}
+                                            Defeated
+                                        {% endif %}
+                                    </div>
                                 </div><!-- col -->
                             </div>
                         </div><!-- row holding a table -->

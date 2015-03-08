@@ -35,7 +35,8 @@ def law(request, law_name):
         context_dict['votes_for'] = votes.filter(vote=UserVote.YES)
         context_dict['votes_against'] = votes.filter(vote=UserVote.NO)
         context_dict['law'] = law
-        # this should be taken care of in the template, the information is already in the law
+        # this should be taken care of in the template, the information is already in the law, just send the law
+        # also, you cannot compare strings in the template, bad bad practice for the future
         # context_dict['law_result'] =  law_result(law)
         context_dict['commentForm'] = LawCommentForm()
         context_dict['comments'] = comments

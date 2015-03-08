@@ -35,7 +35,13 @@
                             <td>{{ law.name }}</td>
                             <td>{{ law.topic }}</td>
                             <td>{{ law.date }}</td>
-                            <td>{{ law.result }}</td>
+                            <td>
+                                {% if law.result == '1' %}
+                                    Carried
+                                {% else %}
+                                    Defeated
+                                {% endif %}
+                            </td>
                         </tr>
 
                     {% endfor %}
