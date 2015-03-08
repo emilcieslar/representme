@@ -24,7 +24,7 @@ def index(request):
     latest_laws = Law.objects.order_by('-date')[:10]
     # for each of those laws get the excerpt and add the pair to the dictionary to be returned
     for law in latest_laws:
-        law_excerpt = Law.text[:200]
+        law_excerpt = law.text[:200]
         latest_laws_results.append([law, law_excerpt])
 
 
