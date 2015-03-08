@@ -1,7 +1,5 @@
 from django.shortcuts import render
-import re
-import requests
-import json
+
 from representME.models import Law, Comment, UserVote, Constituency, MSP
 from representME.forms import UserForm, UserProfileForm, LawCommentForm
 from django.contrib.auth.models import User
@@ -42,82 +40,7 @@ def law(request, law_name):
     except Law.DoesNotExist:
         pass
 
-    #check if user is logged in
-    if request.user.is_authenticated():
-        member_msps = get_msps(user.postcode)
-    else:
-        member_msps = {}
-
-    context_dict['member_msps'] = member_msps
-
     return render(request, 'representME/law.html', context_dict)
-
-#Reused from Cristina's previous project
-def is_valid(postcode):
-    """
-    check if parameter provided could be a postcode
-    :param postcode:
-    :return:True or False
-    """
-    postcode = postcode.upper()
-    postcode = re.sub('\s+', '', postcode)
-    inward = 'ABDEFGHJLNPQRSTUWXYZ'
-    fst = 'ABCDEFGHIJKLMNOPRSTUWYZ'
-    sec = 'ABCDEFGHJKLMNOPQRSTUVWXY'
-    thd = 'ABCDEFGHJKSTUW'
-    fth = 'ABEHMNPRVWXY'
-
-    return None != (re.match('[%s][1-9]\d[%s][%s]$' % (fst, inward, inward), postcode) or
-                    re.match('[%s][1-9]\d\d[%s][%s]$' % (fst, inward, inward), postcode) or
-                    re.match('[%s][%s]\d\d[%s][%s]$' % (fst, sec, inward, inward), postcode) or
-                    re.match('[%s][%s][1-9]\d\d[%s][%s]$' % (fst, sec, inward, inward), postcode) or
-                    re.match('[%s][1-9][%s]\d[%s][%s]$' % (fst, thd, inward, inward), postcode) or
-                    re.match('[%s][%s][1-9][%s]\d[%s][%s]$' % (fst, sec, fth, inward, inward), postcode))
-
-#Reused from Cristina's previous project
-def get_constituencies(postcode):
-    """
-    request regions mapit.mysociety.org for the given postcode
-    :param postcode:
-    :return:dictionary
-    """
-    if not is_valid(postcode):
-        return {'ERROR': "Invalid postcode."}
-
-    r = requests.get("http://mapit.mysociety.org/postcode/" + postcode)
-    if r.status_code != 200:
-        return {'ERROR': "There was an error looking up that postcode."}
-
-    data = json.loads(r.content)
-    areas = data['areas']
-    regions = {}
-    for item in areas:
-        if areas[item]['type_name'].startswith("Scottish Parliament constituency"):
-            regions['constituency'] = [str(areas[item]['name'])]
-        if areas[item]['type_name'].startswith("Scottish Parliament region"):
-            regions['region'] = [str(areas[item]['name'])]
-
-    return regions
-
-#Reused from Cristina's previous project
-def get_msps(postcode):
-    """
-    search the database for msps for each constituency received from get_constituencies
-    :param postcode:
-    :return:dictionary
-    """
-    regions = get_constituencies(postcode)
-    if regions.has_key('ERROR'):
-        return regions
-
-    print regions
-    msps = {}
-    for item in regions:
-        print regions[item][0]
-        const = Constituency.objects.filter(name=regions[item][0])
-        for c in const:
-            msps[regions[item][0]] = MSP.objects.filter(constituency=c.id)
-    return msps
 
 #function to return the number of votes for, takes a list of votes corresponding to a given law
 #and returns the number of votes in favour
