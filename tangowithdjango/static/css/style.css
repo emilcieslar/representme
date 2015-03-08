@@ -139,6 +139,10 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                 display: none;
             }
 
+                .login-form a {
+                    color: white;
+                }
+
                 .login-form input[type=submit], .login-form input[type=text], .login-form input[type=password] {
                     height: 45px;
                     width: 100%;
@@ -219,7 +223,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 .registration-form {
     width: 100%;
     background: #d1e6f4;
-    overflow: hidden;
+    overflow: visible;
     padding: 2%;
 }
 
@@ -232,8 +236,24 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         font-family: 'Montserrat', sans-serif;
     }
 
+    .registration-form .error {
+        position: relative;
+    }
+
     .registration-form .error input {
         background: #f3a59d;
+    }
+
+    .registration-form .error div {
+        position: absolute;
+        left: 0;
+        top: -20px;
+        background: white;
+        height: 20px;
+        line-height: 20px;
+        padding: 0 10px;
+        font-size: 14px;
+        margin-left: 5%;
     }
 
     .registration-form input[type=submit] {

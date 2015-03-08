@@ -7,7 +7,7 @@ from representME.models import UserProfile, Comment
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), label="", help_text="")
     email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Email address'}), label="", help_text="")
-    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}), label="", help_text="", error_messages={'required': 'Please let us know what to call you!'})
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}), label="", help_text="")
 
     class Meta:
         model = User

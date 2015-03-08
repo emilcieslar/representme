@@ -167,6 +167,18 @@ def laws(request):
 
     return render(request, 'representME/laws.html', context_dict)
 
+def msps(request):
+    context_dict = {}
+
+    try:
+        msps = MSP.objects.order_by('-lastname')
+        context_dict['msps'] = msps;
+
+    except:
+        pass
+
+    return render(request, 'representME/msps.html', context_dict)
+
 @login_required
 def user(request, username):
     context_dict = {}
