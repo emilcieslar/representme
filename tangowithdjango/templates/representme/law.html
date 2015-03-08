@@ -27,7 +27,7 @@
 
                 <div class="right-side">
                     {% if user.is_authenticated %}
-                        {% if user_vote %}
+                        {% if user.vote %}
                             <div class="against number">{{ votes_against }}</div>
                             <div class="approve number">{{ votes_for }}</div>
                         {% else %}
@@ -91,7 +91,7 @@
 
                                 <div class="large-3 medium-3 small-6 columns">
                                     <div class="msp-wrap">
-                                        <div class="vote"></div>
+                                        <div class="vote {% if msp_vote.vote == '1' %}yes{% elif msp_vote.vote == '2' %}no{% endif %}"></div>
                                         <h6>{{ msp.firstname }} {{ msp.lastname }}</h6>
                                         <img src="{{ msp.img }}" />
                                     </div>
