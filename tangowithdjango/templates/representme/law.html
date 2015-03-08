@@ -54,7 +54,7 @@
                                 <div class="col">
                                     {% if user.is_authenticated %}
                                         <h4>Your vote</h4>
-                                        <div class="your-vote {{ user.vote }}"></div>
+                                        <div class="your-vote">{{ user_vote }}</div>
                                     {% else %}
                                         <h4>Log in to vote</h4>
                                         <div class="your-vote"></div>

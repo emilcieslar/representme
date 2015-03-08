@@ -70,23 +70,15 @@ class UserVote(models.Model):
     """
     represents an msp's vote for a division
     """
-    YES = 1
-    NO = 2
-    ABSTAIN = 3
-    ABSENT = 4
-    VOTES = (
-        (YES, 'Yes'),
-        (NO, 'No'),
-        (ABSTAIN, 'Abstain'),
-        (ABSENT, 'Absent')
-    )
 
     user = models.ForeignKey(User)
     law = models.ForeignKey(Law)
-    vote = models.CharField(max_length=1, choices=VOTES, null=True)
+    voted = models.BooleanField(default=False)
+    vote_for = models.BooleanField(default=False)
+    vote_against = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.vote
+        return u'%s %s' % (self.user.username, self.law)
 
 
 class MSP(models.Model):

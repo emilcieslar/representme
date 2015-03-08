@@ -97,6 +97,11 @@ def law(request, law_name):
 
         context_dict['user_msps'] = user_msps_results
 
+        context_dict['user_vote'] = ''
+        try:
+            context_dict['user_vote'] = UserVote.objects.get(user=this_user, law=law)
+        except UserVote.DoesNotExist:
+            context_dict['user_vote'] = ''
     except Law.DoesNotExist:
         pass
 

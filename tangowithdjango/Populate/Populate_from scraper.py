@@ -73,10 +73,13 @@ def get_votes(parsing_law, law, type, result):
                 if lastname != 'Copy':
                     try:
                         msp = MSP.objects.get(firstname=firstname, lastname=lastname)
+
+                        print msp
                         v = MSPVote(msp=msp, law=law, vote=result)
                         v.save()
                     except MSP.DoesNotExist:
-                        pass
+                        print "this MSP is not in the parliament"
+                        print firstname + lastname + law.name
 
 
 def populate_law(files_location, startdate, enddate):
