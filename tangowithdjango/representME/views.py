@@ -18,7 +18,20 @@ def index(request):
 
     context_dict = {}
 
-    context_dict['latest_laws'] = Law.objects.order_by('-date')[:10]
+    # have an empty dictionary that will contain tuples
+    latest_laws_results = {}
+    # get latest 10 laws, here you change the number of laws needed on index page
+    latest_laws = Law.objects.order_by('-date')[:10]
+    # for each of those laws get the excerpt and add the pair to the dictionary to be returned
+    for law in latest_laws:
+        law_excerpt = Law.text[:200]
+        latest_laws_results.append([law, law_excerpt])
+
+
+    # 'latest_laws' sent to templates is a list of tuples, so we don't accidentally mix up the order
+    # this is how to iterate through it in templates:
+    # {% for law, law_excerpt in latest_laws %}
+    context_dict['latest_laws'] = latest_laws_results
     context_dict['latest_comments'] = Comment.objects.order_by('-time')[:10]
     context_dict['user_form'] = UserForm()
     context_dict['profile_form'] = UserProfileForm()
