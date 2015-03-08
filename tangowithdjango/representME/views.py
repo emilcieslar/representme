@@ -18,6 +18,8 @@ def index(request):
 
     context_dict = {}
 
+    context_dict['latest_laws'] = Law.objects.order_by('-date')[:10]
+    context_dict['latest_comments'] = Comment.objects.order_by('-time')[:10]
     context_dict['user_form'] = UserForm()
     context_dict['profile_form'] = UserProfileForm()
 
