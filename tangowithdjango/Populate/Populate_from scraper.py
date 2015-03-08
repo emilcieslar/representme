@@ -186,9 +186,10 @@ def populate_current_msps():
                 p = Party(name=party)
                 p.save()
             c = Constituency.objects.get(name=row[3].strip())
-            m = MSP(firstname=row[1].strip(), lastname=row[0], constituency=c, party=p, foreignid=i)
-            img = msp_img_urls[m.firstname + " " + m.lastname]
-            m.img = img
+            firstname = row[1].strip()
+            lastname = row[0]
+            img_path = 'img/images/MSPs/' + firstname + lastname + '.jpg'
+            m = MSP(firstname=firstname, lastname=lastname, constituency=c, party=p, img=img_path, foreignid=i)
             m.save()
 
 

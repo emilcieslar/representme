@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load staticfiles %}
 
 
 
@@ -32,7 +32,8 @@
                     {% for msp in msps %}
 
                         <tr data-href="">
-                            <td><img src="{{ msp.img }}" alt="{{ msp.firstname }} {{ msp.lastname }}"/></td>
+                            <td><img src="../../static/{{ msp.img }}" alt="{{ msp.firstname }} {{ msp.lastname }}"/>
+                            </td>
                             <td>{{ msp.firstname }} {{ msp.lastname }}</td>
                             <td>{{ msp.constituency }}</td>
                             <td>{{ msp.party }}</td>
