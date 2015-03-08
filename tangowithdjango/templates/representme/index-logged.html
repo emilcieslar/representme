@@ -20,53 +20,27 @@
 
             <div class="content-inner-header">
                 <h2>{{ user.username }} - My MSPs</h2>
-                <div class="tag">Noob</div>
+
+                <div class="tag">{{ user_badge }}</div>
             </div><!-- .content-inner-header -->
 
             <div class="content-inner-content">
 
                 <div class="row my-msp-vote">
                     <div class="large-12 medium-12 small-12 columns">
-                        <div class="large-3 medium-3 small-6 columns">
-                            <div class="msp-wrap">
-                                <h6>Paris Bilton</h6>
-                                <img src="img/arnold.jpg" />
-                                <div class="match">
-                                    <div></div>
-                                    <span>80% match</span>
+                        {% for msp, match in user_msps_match %}
+                            <div class="large-3 medium-3 small-6 columns">
+                                <div class="msp-wrap">
+                                    <h6>msp</h6>
+                                    <img src="{{ msp.img }}"/>
+
+                                    <div class="match">
+                                        <div></div>
+                                        <span>{{ match }}% match</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </div><!-- one particular msp -->
-                        <div class="large-3 medium-3 small-6 columns">
-                            <div class="msp-wrap">
-                                <h6>Paris Bilton</h6>
-                                <img src="img/arnold.jpg" />
-                                <div class="match">
-                                    <div></div>
-                                    <span>80% match</span>
-                                </div>
-                            </div>
-                        </div><!-- one particular msp -->
-                        <div class="large-3 medium-3 small-6 columns">
-                            <div class="msp-wrap">
-                                <h6>Paris Bilton</h6>
-                                <img src="img/arnold.jpg" />
-                                <div class="match">
-                                    <div></div>
-                                    <span>80% match</span>
-                                </div>
-                            </div>
-                        </div><!-- one particular msp -->
-                        <div class="large-3 medium-3 small-6 columns">
-                            <div class="msp-wrap">
-                                <h6>Paris Bilton</h6>
-                                <img src="img/arnold.jpg" />
-                                <div class="match">
-                                    <div></div>
-                                    <span>80% match</span>
-                                </div>
-                            </div>
-                        </div><!-- one particular msp -->
+                            </div><!-- one particular msp -->
+                        {% endfor %}
                     </div>
                 </div><!-- row holding my msps votes -->
 
@@ -81,22 +55,13 @@
                 <div class="large-11 medium-11 small-12 latest-laws-wrapper columns">
                     <div class="latest-laws-header">Latest laws</div>
                     <div class="latest-laws-wrapper-inner">
-                        <div class="latest-law">
-                            <h3>Name of the law &nbsp;&nbsp;<span>Traffic</span></h3>
-                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
-                        </div><!-- .latest-law -->
-                        <div class="latest-law">
-                            <h3>Name of the law &nbsp;&nbsp;<span>Traffic</span></h3>
-                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
-                        </div><!-- .latest-law -->
-                        <div class="latest-law">
-                            <h3>Name of the law &nbsp;&nbsp;<span>Traffic</span></h3>
-                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
-                        </div><!-- .latest-law -->
-                        <div class="latest-law">
-                            <h3>Name of the law &nbsp;&nbsp;<span>Traffic</span></h3>
-                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
-                        </div><!-- .latest-law -->
+                        {% for law, law_excerpt in latest_laws %}
+                            <div class="latest-law">
+                                <h3>{{ law.name }} &nbsp;&nbsp;<span> {{ law.topic }}</span></h3>
+
+                                <p>{{ law_excerpt }}...</p>
+                            </div><!-- .latest-law -->
+                        {% endfor %}
                     </div><!-- .latest-laws-wrapper-inner -->
                 </div><!-- .latest-laws-wrapper -->
             </div><!-- row containing latest laws -->
@@ -106,24 +71,18 @@
                 <div class="large-offset-1 large-11 medium-offset-1 medium-11 small-12 latest-laws-wrapper columns">
                     <div class="latest-laws-header">Latest comments</div>
                     <div class="latest-laws-wrapper-inner">
-                        <div class="latest-law">
-                            <h3>Karl Marks &nbsp;&nbsp;<span>26/2/2015 (14:30)</span></h3>
-                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
-                        </div><!-- .latest-law -->
-                        <div class="latest-law">
-                            <h3>Carol Steward &nbsp;&nbsp;<span>26/2/2015 (14:25)</span></h3>
-                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
-                        </div><!-- .latest-law -->
-                        <div class="latest-law">
-                            <h3>Mike Tense &nbsp;&nbsp;<span>26/2/2015 (14:20)</span></h3>
-                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
-                        </div><!-- .latest-law -->
-                        <div class="latest-law">
-                            <h3>Carol Steward &nbsp;&nbsp;<span>26/2/2015 (14:25)</span></h3>
-                            <p>Short description of the law to create the atmosphere for the user and get him into the context...</p>
-                        </div><!-- .latest-law -->
-                    </div><!-- .latest-laws-wrapper-inner -->
-                </div><!-- .latest-laws-wrapper -->
+                        {% for comment, comment_excerpt in latest_comments %}
+                            <div class="latest-law">
+                                <h3> {{ comment.user.username }} on &nbsp;&nbsp;<span>{{ comment.law }}</span> at
+                                    <span>{{ comment.time }}</span></h3>
+
+                                <p>{{ comment_excerpt }}...</p>
+                            </div><!-- .latest-comment -->
+                        {% endfor %}
+                    </div>
+                    <!-- .latest-comment-wrapper-inner -->
+                </div>
+                <!-- .latest-comment-wrapper -->
             </div><!-- row containing latest comments -->
         </div><!-- column containing latest comments -->
     </div><!-- row containing latest laws and latest comments -->

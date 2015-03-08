@@ -12,7 +12,22 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 # used by index and userview
-def get_index_page(user):
+def computeMatch(user, msp):
+    return 0
+
+
+# this is bulshit, someone write this
+def computeUserBadge(user):
+    number_of_comments = Comment.objects.filter(user=user).count()
+    if number_of_comments < 5:
+        return 'Noob'
+    elif number_of_comments < 10:
+        return 'Newbie'
+    else:
+        return 'Master'
+
+
+def get_index_page(user, logged_in):
     context_dict = {}
     # have an empty dictionary that will contain tuples
     latest_laws_results = []
@@ -24,22 +39,33 @@ def get_index_page(user):
         law_excerpt = law.text[:200]
         latest_laws_results.append([law, law_excerpt])
 
-    # 'latest_laws' sent to templates is a list of tuples, so we don't accidentally mix up the order
-    # this is how to iterate through it in templates:
-    # {% for law, law_excerpt in latest_laws %}
+    # same for comments
+    latest_comments_results = []
+    latest_comments = Comment.objects.order_by('-time')[:10]
+    for comment in latest_comments:
+        comment_excerpt = comment.text[:200]
+        latest_comments_results.append([comment, comment_excerpt])
+
+
     context_dict['latest_laws'] = latest_laws_results
-    context_dict['latest_comments'] = Comment.objects.order_by('-time')[:10]
+    context_dict['latest_comments'] = latest_comments_results
     context_dict['user_form'] = UserForm()
     context_dict['profile_form'] = UserProfileForm()
 
     # you need request.user to access the django user stuff
-    if user.is_authenticated():
+    if logged_in:
         # you use this to get the Userprofile data associated with this user
         this_user = UserProfile.objects.get(user=user)
         user_msps = get_msps(this_user.postcode)
+        user_msps_match = []
+        for msp in user_msps:
+            match = computeMatch(user, msp)
+            user_msps_match.append([msp, match])
     else:
-        user_msps = {}
-    context_dict['user_msps'] = user_msps
+        user_msps_match = {}
+    context_dict['user_msps_match'] = user_msps_match
+    context_dict['user_badge'] = computeUserBadge(user)
+    print user_msps_match
     return context_dict
 
 
@@ -48,7 +74,7 @@ def index(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
 
-    context_dict = get_index_page(request.user)
+    context_dict = get_index_page(request.user, False)
 
     return render(request,'representME/index.html', context_dict)
 
@@ -175,28 +201,6 @@ def get_msps(postcode):
                 msps.append(msp)
     return msps
 
-
-''' this is redundant
-def law_result(law):
-    if law.result == "1":
-        return "Carried"
-    elif law.result == "0":
-        return "Refused"
-    else:
-        return "None"
-'''
-'''this is just wrong
-def laws_result(laws):
-    for law in laws:
-        if law.result == "1":
-            law.result = "Carried"
-        elif law.result == "0":
-            law.result = "Refused"
-        else:
-            law.result = "None"
-    return laws
-'''
-
 def laws(request):
     context_dict = {}
 
@@ -223,12 +227,11 @@ def msps(request):
 
 @login_required
 def userview(request, username):
-    context_dict = get_index_page(request.user)
+    context_dict = get_index_page(request.user, True)
 
     try:
         userObj = User.objects.get(username=username)
-
-        context_dict['user'] = userObj;
+        context_dict['user'] = userObj
     except User.DoesNotExist:
         pass
 
