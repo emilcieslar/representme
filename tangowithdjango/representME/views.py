@@ -11,7 +11,6 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-# used by index and userview
 def computeMatch(user, msp):
     return 0
 

@@ -123,7 +123,7 @@ class MSPVote(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(User)
     law = models.ForeignKey(Law)
-    time = models.DateField()
+    time = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
 
     def __unicode__(self):
