@@ -26,8 +26,18 @@
                 <div class="tag upcoming">{{ upcoming }}</div>
 
                 <div class="right-side">
-                    <div class="against number">{{ votes_against }}</div>
-                    <div class="approve number">{{ votes_for }}</div>
+                    {% if user.is_authenticated %}
+                        {% if user_vote %}
+                            <div class="against number">{{ votes_against }}</div>
+                            <div class="approve number">{{ votes_for }}</div>
+                        {% else %}
+                            <div class="against"></div>
+                            <div class="approve"></div>
+                        {% endif %}
+                    {% else %}
+                        <div class="against number">{{ votes_against }}</div>
+                        <div class="approve number">{{ votes_for }}</div>
+                    {% endif %}
                 </div><!-- .right -->
             </div><!-- .content-inner-header -->
 
@@ -76,34 +86,19 @@
 
                 <div class="row my-msp-vote">
                     <div class="large-12 medium-12 small-12 columns">
-                        <div class="large-3 medium-3 small-6 columns">
-                            <div class="msp-wrap">
-                                <div class="vote"></div>
-                                <h6>Paris Bilton</h6>
-                                <img src="img/arnold.jpg" />
-                            </div>
-                        </div><!-- one particular msp -->
-                        <div class="large-3 medium-3 small-6 columns">
-                            <div class="msp-wrap">
-                                <div class="vote no"></div>
-                                <h6>Paris Bilton</h6>
-                                <img src="img/arnold.jpg" />
-                            </div>
-                        </div><!-- one particular msp -->
-                        <div class="large-3 medium-3 small-6 columns">
-                            <div class="msp-wrap">
-                                <div class="vote yes"></div>
-                                <h6>Paris Bilton</h6>
-                                <img src="img/arnold.jpg" />
-                            </div>
-                        </div><!-- one particular msp -->
-                        <div class="large-3 medium-3 small-6 columns">
-                            <div class="msp-wrap">
-                                <div class="vote"></div>
-                                <h6>Paris Bilton</h6>
-                                <img src="img/arnold.jpg" />
-                            </div>
-                        </div><!-- one particular msp -->
+                        {% if user_msps %}
+                            {% for msp, msp_vote in user_msps %}
+
+                                <div class="large-3 medium-3 small-6 columns">
+                                    <div class="msp-wrap">
+                                        <div class="vote"></div>
+                                        <h6>{{ msp.firstname }} {{ msp.lastname }}</h6>
+                                        <img src="{{ msp.img }}" />
+                                    </div>
+                                </div><!-- one particular msp -->
+
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div><!-- row holding my msps votes -->
 
@@ -134,7 +129,7 @@
                     <input type="submit" name="send-comment" value="" />
                 </form>
             </div><!-- .textarea -->
-            <div class="latest-laws-wrapper-inner">
+            <div class="latest-laws-wrapper-inner" id="comments-wrapper">
                 {% if comments %}
                     {% for comment in comments %}
 
@@ -145,7 +140,7 @@
 
                     {% endfor %}
                 {% else %}
-                    <div class="latest-law">
+                    <div class="latest-law no-comments">
                         <p>No comments added yet, be the first to comment!</p>
                     </div><!-- .latest-law -->
                 {% endif %}

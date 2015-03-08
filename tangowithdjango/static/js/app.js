@@ -32,4 +32,29 @@ $(document).ready(function() {
         }
     });
 
+    // Add a comment to the database
+    $('input[name=send-comment]').click(function(e) {
+        e.preventDefault();
+
+        var text;
+        text = $(this).parent().find('textarea').val();
+        console.log(text);
+
+        // If we're adding first comment
+        if($(".no-comments").length != 0) {
+            $(".no-comments").remove();
+        }
+
+        // Add the comment to the wrapper
+        $('#comments-wrapper').prepend('<div class="latest-law" style="display: none"><h3>Emil Cieslar &nbsp;&nbsp;<span>Datum a cas</span></h3><p>' + text + '</p></div><!-- .latest-law -->');
+        // After the HTML is added, display it nicely
+        $('#comments-wrapper .latest-law').fadeIn('slow');
+
+    /*$.get('/rango/like_category/', {text: text}, function(data){
+               $('#like_count').html(data);
+               $('#likes').hide();
+    });*/
+
+    });
+
 });
