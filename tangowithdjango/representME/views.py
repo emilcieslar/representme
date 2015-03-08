@@ -4,29 +4,25 @@ import json
 import re
 
 import requests
-from representME.models import Law, Comment, UserVote, Constituency, MSP, UserProfile
+from representME.models import Law, Comment, UserVote, Constituency, MSP, UserProfile, MSPVote
 from representME.forms import UserForm, UserProfileForm, LawCommentForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-def index(request):
-
-    if request.user.is_authenticated():
-        return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
-
+# used by index and userview
+def get_index_page(user):
     context_dict = {}
-
     # have an empty dictionary that will contain tuples
-    latest_laws_results = {}
+    latest_laws_results = []
     # get latest 10 laws, here you change the number of laws needed on index page
     latest_laws = Law.objects.order_by('-date')[:10]
     # for each of those laws get the excerpt and add the pair to the dictionary to be returned
+    # here you can control the length of the excerpt
     for law in latest_laws:
         law_excerpt = law.text[:200]
         latest_laws_results.append([law, law_excerpt])
-
 
     # 'latest_laws' sent to templates is a list of tuples, so we don't accidentally mix up the order
     # this is how to iterate through it in templates:
@@ -37,14 +33,22 @@ def index(request):
     context_dict['profile_form'] = UserProfileForm()
 
     # you need request.user to access the django user stuff
-    if request.user.is_authenticated():
+    if user.is_authenticated():
         # you use this to get the Userprofile data associated with this user
-        this_user = UserProfile.objects.get(user=request.user)
+        this_user = UserProfile.objects.get(user=user)
         user_msps = get_msps(this_user.postcode)
     else:
         user_msps = {}
-
     context_dict['user_msps'] = user_msps
+    return context_dict
+
+
+def index(request):
+
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
+
+    context_dict = get_index_page(request.user)
 
     return render(request,'representME/index.html', context_dict)
 
@@ -69,18 +73,32 @@ def law(request, law_name):
         context_dict['comments'] = comments
         context_dict['comments_number'] = comments.count()
 
+        # you need request.user to access the django user stuff
+        if request.user.is_authenticated():
+            # you use this to get the Userprofile data associated with this user
+            this_user = UserProfile.objects.get(user=request.user)
+            user_msps = get_msps(this_user.postcode)
+        else:
+            user_msps = {}
+
+        # have an empty dictionary that will contain tuples
+        user_msps_results = []
+        # for each of those user_msps get the vote for this law and add the pair to the dictionary to be returned
+        for msp in user_msps:
+            try:
+                msp_vote = MSPVote.objects.get(msp=msp, law=law)
+            except MSPVote.DoesNotExist:
+                msp_vote = ''
+            user_msps_results.append([msp, msp_vote])
+
+        # might get error in templates if db is not complete and an MSP vote is ''
+        # delete this and the print once it is tested
+        print user_msps_results
+
+        context_dict['user_msps'] = user_msps_results
+
     except Law.DoesNotExist:
         pass
-
-    # you need request.user to access the django user stuff
-    if request.user.is_authenticated():
-        # you use this to get the Userprofile data associated with this user
-        this_user = UserProfile.objects.get(user=request.user)
-        user_msps = get_msps(this_user.postcode)
-    else:
-        user_msps = {}
-
-    context_dict['user_msps'] = user_msps
 
     return render(request, 'representME/law.html', context_dict)
 
@@ -200,7 +218,7 @@ def msps(request):
 
 @login_required
 def userview(request, username):
-    context_dict = {}
+    context_dict = get_index_page(request.user)
 
     try:
         userObj = User.objects.get(username=username)
