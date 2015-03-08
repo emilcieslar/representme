@@ -3,7 +3,7 @@ import json
 import re
 
 import requests
-from representME.models import Law, Comment, UserVote, Constituency, MSP
+from representME.models import Law, Comment, UserVote, Constituency, MSP, UserProfile
 from representME.forms import UserForm, UserProfileForm, LawCommentForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
@@ -45,8 +45,11 @@ def law(request, law_name):
     except Law.DoesNotExist:
         pass
 
-    if user.is_authenticated():
-        user_msps = get_msps(user.postcode)
+    # you need request.user to access the django user stuff
+    if request.user.is_authenticated():
+        # you use this to get the Userprofile data associated with this user
+        this_user = UserProfile.objects.get(user=request.user)
+        user_msps = get_msps(this_user.postcode)
     else:
         user_msps = {}
 
@@ -168,7 +171,7 @@ def msps(request):
     return render(request, 'representME/msps.html', context_dict)
 
 @login_required
-def user(request, username):
+def userview(request, username):
     context_dict = {}
 
     try:

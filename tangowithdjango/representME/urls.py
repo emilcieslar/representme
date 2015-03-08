@@ -3,7 +3,7 @@ from representME import views
 
 urlpatterns = patterns('',
         url(r'^$', views.index, name='index'),
-        url(r'^user/(?P<username>[\w\-]+)/$', views.user, name='user'),
+        url(r'^user/(?P<username>[\w\-]+)/$', views.userview, name='user'),
         #url(r'^about/$', views.about, name='about'),
         #url(r'^add_category/$', views.add_category, name='add_category'),
         url(r'^laws/(?P<law_name>[\w\-.]+)/$', views.law, name='law'),
