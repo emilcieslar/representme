@@ -149,7 +149,8 @@ def populate_topic():
 
 
 def populate_constituency():
-    with open(settings.STATIC_PATH + '\data\districts.csv') as f:
+    constituency_path = os.path.join(settings.STATIC_PATH, 'data', 'districts.csv')
+    with open(constituency_path) as f:
         next(f)
         for line in f:
             line = line.split(',')
@@ -168,7 +169,8 @@ def populate_constituency():
 
 
 def populate_current_msps():
-    with open(settings.PROJECT_PATH + '\\tangowithdjango\scraper\msp_scraper\msps.csv', mode='r') as infile:
+    msps_path = os.path.join(settings.PROJECT_PATH, 'tangowithdjango', 'scraper', 'msp_scraper', 'msps.csv')
+    with open(msps_path, mode='r') as infile:
         reader = csv.reader(infile)
         i = 0
         for row in reader:

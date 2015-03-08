@@ -1,5 +1,5 @@
 from tangowithdjango import settings
-
+import os
 __author__ = '2168879m'
 """
 This file contains all the static information accessed by populating function definitions
@@ -34,7 +34,7 @@ topic_extracter_name = '.topic_extracter'
 number_of_msps = 128
 
 # change here for location of scraped divisions
-divisions_location = settings.PROJECT_PATH + '\\tangowithdjango\\scraper\\report_scraper\\new_data\\'
+divisions_location = os.path.join(settings.PROJECT_PATH, 'tangowithdjango', 'scraper', 'report_scraper', 'new_data')
 
 # change here to only get subset of divisions
 startdate = '02 June 2011'          # first meeting of new parliament       -- 2 June 2011
