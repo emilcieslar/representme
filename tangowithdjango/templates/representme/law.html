@@ -54,15 +54,7 @@
                                 <div class="col">
                                     {% if user.is_authenticated %}
                                         <h4>Your vote</h4>
-                                        <div class="your-vote">
-                                            {% if user_vote.voted %}
-                                                {% if user_vote.vote_for %}
-                                                    For
-                                                {% else %}
-                                                    Against
-                                                {% endif %}
-                                            {% endif %}
-                                        </div>
+                                        <div class="your-vote{% if user_vote.voted %}{% if user_vote.vote_for %} yes{% else %} no{% endif %}{% endif %}"></div>
                                     {% else %}
                                         <h4>Log in to vote</h4>
                                         <div class="your-vote"></div>
