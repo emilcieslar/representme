@@ -31,8 +31,8 @@
                         {% for msp, match in user_msps_match %}
                             <div class="large-3 medium-3 small-6 columns">
                                 <div class="msp-wrap">
-                                    <h6>msp</h6>
-                                    <img src="../../../static/{{ msp.img }}"/>
+                                    <h6>{{ msp.firstname }} {{ msp.lastname }}</h6>
+                                    <img src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg" />
 
                                     <div class="match">
                                         <div></div>
@@ -56,11 +56,15 @@
                     <div class="latest-laws-header">Latest laws</div>
                     <div class="latest-laws-wrapper-inner">
                         {% for law, law_excerpt in latest_laws %}
+
                             <div class="latest-law">
+                            <a href="{% url "law" law.name %}">
                                 <h3>{{ law.name }} &nbsp;&nbsp;<span> {{ law.topic }}</span></h3>
 
                                 <p>{{ law_excerpt }}...</p>
+                            </a>
                             </div><!-- .latest-law -->
+
                         {% endfor %}
                     </div><!-- .latest-laws-wrapper-inner -->
                 </div><!-- .latest-laws-wrapper -->

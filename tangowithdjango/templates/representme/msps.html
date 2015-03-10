@@ -17,7 +17,6 @@
             <input type="submit" name="submit-search" value="" />
         </div><!-- .search -->
 
-        <div class="content-inner">
 
             <table class="laws-table">
                 {% if msps %}
@@ -32,7 +31,7 @@
                     {% for msp in msps %}
 
                         <tr data-href="">
-                            <td><img src="../../static/{{ msp.img }}" alt="{{ msp.firstname }} {{ msp.lastname }}"/>
+                            <td><img width="50%" src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg""/>
                             </td>
                             <td>{{ msp.firstname }} {{ msp.lastname }}</td>
                             <td>{{ msp.constituency }}</td>
@@ -44,7 +43,6 @@
                 {% endif %}
             </table>
 
-        </div><!-- .content-inner -->
 
     </div><!-- row containing main content with white transparent background -->
 
