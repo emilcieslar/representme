@@ -86,9 +86,19 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
     clear: both;
     background: white;
     /* because of the absolute menu on mobile */
-    position: relative;
     z-index: 100;
 }
+
+    #login-shade {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 800px;
+        z-index: 50;
+        background: rgba(0,0,0,0.7);
+        display: none;
+    }
 
     #logo {
         width: 239px;
@@ -108,6 +118,11 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         .header .menu li {
             display: block;
             float: left;
+        }
+        
+        .header .menu li.login-menu {
+            position: relative;
+            z-index: 100;
         }
 
             .link, .login-link, .header .menu-icon {

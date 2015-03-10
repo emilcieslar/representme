@@ -3,6 +3,7 @@
 
     .header {
         margin-top: 0;
+        position: relative;
     }
 
     .header .menu {

@@ -237,6 +237,9 @@ def userview(request, username):
 
     return render(request, 'representME/index-logged.html', context_dict)
 
+def login(request):
+    return HttpResponseRedirect('/representME/#login')
+
 def register(request):
 
     # A boolean value for telling the template whether the registration was successful.

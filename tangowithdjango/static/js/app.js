@@ -19,6 +19,7 @@ $(document).ready(function() {
     // Show and hide log in form
     $('.login-link').click(function() {
         $('.login-form').toggle();
+        $('#login-shade').toggle();
     })
 
     // Set height for .msp-wrap .vote (it's absolutely positioned
@@ -38,7 +39,7 @@ $(document).ready(function() {
         e.preventDefault();
 
         var text;
-        text = $.trim($(this).parent().find('textarea').val());
+        text = $.trim($('#comment_form textarea').val());
 
         // If the comment is not empty
         if(text.length != 0) {
@@ -53,6 +54,12 @@ $(document).ready(function() {
             // After the HTML is added, display it nicely
             $('#comments-wrapper .latest-law').fadeIn('slow');
 
+            // Increase commends number
+            $('#comments_number').text(parseInt($('#comments_number').text())+1);
+
+            // Clear the text in the commend text field
+            $('#comment_form textarea').val('');
+
         } else {
             alert("Empty comment.");
         }
@@ -63,5 +70,12 @@ $(document).ready(function() {
     });*/
 
     });
+
+    // Check whether we have to display login form
+    var hashValue = location.hash;
+    if(hashValue == "#login") {
+        $('.login-form').fadeIn();
+        $('#login-shade').fadeIn();
+    }
 
 });
