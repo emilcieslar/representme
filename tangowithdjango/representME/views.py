@@ -57,13 +57,14 @@ def get_index_page(user, logged_in):
         this_user = UserProfile.objects.get(user=user)
         user_msps = get_msps(this_user.postcode)
         user_msps_match = []
+        context_dict['user_badge'] = computeUserBadge(user)
         for msp in user_msps:
             match = computeMatch(user, msp)
             user_msps_match.append([msp, match])
     else:
         user_msps_match = {}
     context_dict['user_msps_match'] = user_msps_match
-    context_dict['user_badge'] = computeUserBadge(user)
+
     print user_msps_match
     return context_dict
 

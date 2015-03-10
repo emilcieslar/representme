@@ -93,7 +93,7 @@
                                     <div class="msp-wrap">
                                         <div class="vote {% if msp_vote.vote == '1' %}yes{% elif msp_vote.vote == '2' %}no{% endif %}"></div>
                                         <h6>{{ msp.firstname }} {{ msp.lastname }}</h6>
-                                        <img src="{{ msp.img }}" />
+                                        <img src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg" />
                                     </div>
                                 </div><!-- one particular msp -->
 

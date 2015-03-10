@@ -83,14 +83,13 @@
                 <div class="large-11 medium-11 small-12 latest-laws-wrapper columns">
                     <div class="latest-laws-header">Latest laws</div>
                     <div class="latest-laws-wrapper-inner">
-
-                        {% for law in latest_laws %}
+                        {% for law, law_excerpt in latest_laws %}
                             <div class="latest-law">
-                                <h3>{{ law.name }} &nbsp;&nbsp;<span>{{ law.topic }}</span></h3>
-                                <p>{{ law.text }}</p>
+                                <h3>{{ law.name }} &nbsp;&nbsp;<span> {{ law.topic }}</span></h3>
+
+                                <p>{{ law_excerpt }}...</p>
                             </div><!-- .latest-law -->
                         {% endfor %}
-
                     </div><!-- .latest-laws-wrapper-inner -->
                 </div><!-- .latest-laws-wrapper -->
             </div><!-- row containing latest laws -->
@@ -100,14 +99,18 @@
                 <div class="large-offset-1 large-11 medium-offset-1 medium-11 small-12 latest-laws-wrapper columns">
                     <div class="latest-laws-header">Latest comments</div>
                     <div class="latest-laws-wrapper-inner">
-                        {%  for comment in latest_comments %}
-                        <div class="latest-law">
-                            <h3>{{ comment.user }} &nbsp;&nbsp;<span>{{ comment.time }}</span></h3>
-                            <p>{{ comment.text }}</p>
-                        </div><!-- .latest-law -->
+                        {% for comment, comment_excerpt in latest_comments %}
+                            <div class="latest-law">
+                                <h3> {{ comment.user.username }} on &nbsp;&nbsp;<span>{{ comment.law }}</span> at
+                                    <span>{{ comment.time }}</span></h3>
+
+                                <p>{{ comment_excerpt }}...</p>
+                            </div><!-- .latest-comment -->
                         {% endfor %}
-                    </div><!-- .latest-laws-wrapper-inner -->
-                </div><!-- .latest-laws-wrapper -->
+                    </div>
+                    <!-- .latest-comment-wrapper-inner -->
+                </div>
+                <!-- .latest-comment-wrapper -->
             </div><!-- row containing latest comments -->
         </div><!-- column containing latest comments -->
     </div><!-- row containing latest laws and latest comments -->

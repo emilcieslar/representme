@@ -34,23 +34,30 @@ $(document).ready(function() {
 
     // Add a comment to the database
     $('input[name=send-comment]').click(function(e) {
+        // Stop from default behaviour (sending a form using POST request)
         e.preventDefault();
 
         var text;
-        text = $(this).parent().find('textarea').val();
-        console.log(text);
+        text = $.trim($(this).parent().find('textarea').val());
 
-        // If we're adding first comment
-        if($(".no-comments").length != 0) {
-            $(".no-comments").remove();
+        // If the comment is not empty
+        if(text.length != 0) {
+
+            // If we're adding first comment
+            if($(".no-comments").length != 0) {
+                $(".no-comments").remove();
+            }
+
+            // Add the comment to the wrapper
+            $('#comments-wrapper').prepend('<div class="latest-law" style="display: none"><h3>Emil Cieslar &nbsp;&nbsp;<span>Datum a cas</span></h3><p>' + text + '</p></div><!-- .latest-law -->');
+            // After the HTML is added, display it nicely
+            $('#comments-wrapper .latest-law').fadeIn('slow');
+
+        } else {
+            alert("Empty comment.");
         }
 
-        // Add the comment to the wrapper
-        $('#comments-wrapper').prepend('<div class="latest-law" style="display: none"><h3>Emil Cieslar &nbsp;&nbsp;<span>Datum a cas</span></h3><p>' + text + '</p></div><!-- .latest-law -->');
-        // After the HTML is added, display it nicely
-        $('#comments-wrapper .latest-law').fadeIn('slow');
-
-    /*$.get('/rango/like_category/', {text: text}, function(data){
+    /*$.get('/rango/add_comment/', {text: text}, function(data){
                $('#like_count').html(data);
                $('#likes').hide();
     });*/
