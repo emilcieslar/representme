@@ -3,11 +3,14 @@ $(document).ready(function() {
     // Reset or set actions on resize
     $(window).resize(function() {
 
-        // Remove style from menu and .login-form
-        $('.header .menu, .login-form').removeAttr('style');
+        // Remove style from menu, .login-form, #login-shade
+        $('.header .menu, .login-form, #login-shade').removeAttr('style');
 
         // Set height each time user resizes the window
         $('.msp-wrap .vote').height($('.msp-wrap').height()-$('.msp-wrap h6').outerHeight());
+
+        // Set height for #login-shade at load of document
+        $('#login-shade').height($(window).height());
 
     });
 
@@ -71,11 +74,20 @@ $(document).ready(function() {
 
     });
 
+    // Set height for #login-shade at load of document (will be re-set on resize)
+    $('#login-shade').height($(window).height());
+
     // Check whether we have to display login form
     var hashValue = location.hash;
     if(hashValue == "#login") {
         $('.login-form').fadeIn();
         $('#login-shade').fadeIn();
     }
+
+    // Whenever user clicks on #login-shade, it closes the login
+    $('#login-shade').click(function() {
+        $(this).hide();
+        $('.login-form').hide();
+    });
 
 });

@@ -38,11 +38,14 @@
                     <div class="login-link">{% if user.is_authenticated %}{{ user.username }}{% else %}Login{% endif %}</div>
                     <div class="login-form">
                         {% if user.is_authenticated %}
-                            <a href="logout.html">Logout</a>
+                            <a href="{% url "logout" %}">Logout</a>
                         {% else %}
-                            <input type="text" name="login" placeholder="Username or email" />
-                            <input type="password" name="password" placeholder="Password" />
-                            <input type="submit" name="submit-login" value="Log in" />
+                            <form id="login_form" method="post" action="{% url "login" %}">
+                                {% csrf_token %}
+                                <input type="text" name="username" placeholder="Username or email" />
+                                <input type="password" name="password" placeholder="Password" />
+                                <input type="submit" name="submit-login" value="Log in" />
+                            </form>
                         {% endif %}
                     </div><!-- login-form -->
 
