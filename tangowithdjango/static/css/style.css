@@ -141,6 +141,18 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                 padding-right: 44px;
                 cursor: pointer;
                 position: relative;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            .login-invalid, .login-disabled {
+                width: 100%;
+                line-height: 30px;
+                color: red;
+                font-size: 14px;
+                display: none;
             }
 
             .login-form {

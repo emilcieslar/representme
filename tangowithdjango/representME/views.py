@@ -319,18 +319,17 @@ def user_login(request):
                 return HttpResponseRedirect('/representME/')
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponse("Your Rango account is disabled.")
+                return HttpResponseRedirect('/representME/#login-disabled')
         else:
             # Bad login details were provided. So we can't log the user in.
             print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponse("Invalid login details supplied.")
+            return HttpResponseRedirect('/representME/#login-invalid')
 
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.
     else:
-        # No context variables to pass to the template system, hence the
-        # blank dictionary object...
-        return render(request, '/representME/', {})
+        # Redirect to the home page
+        return HttpResponseRedirect('/representME/')
 
 def register(request):
 

@@ -77,12 +77,25 @@ $(document).ready(function() {
     // Set height for #login-shade at load of document (will be re-set on resize)
     $('#login-shade').height($(window).height());
 
-    // Check whether we have to display login form
-    var hashValue = location.hash;
-    if(hashValue == "#login") {
+    // Simple function to display login
+    var displayLogin = function() {
         $('.login-form').fadeIn();
         $('#login-shade').fadeIn();
     }
+
+    // Check whether we have to display login form
+    var hashValue = location.hash;
+    if(hashValue == "#login") {
+        displayLogin();
+    } else if(hashValue == "#login-invalid") {
+        displayLogin();
+        $('.login-invalid').show();
+    } else if(hashValue == "#login-disabled") {
+        displayLogin();
+        $('.login-disabled').show();
+    }
+
+
 
     // Whenever user clicks on #login-shade, it closes the login
     $('#login-shade').click(function() {
