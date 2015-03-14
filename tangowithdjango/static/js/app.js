@@ -21,8 +21,8 @@ $(document).ready(function() {
 
     // Show and hide log in form
     $('.login-link').click(function() {
-        $('.login-form').toggle();
-        $('#login-shade').toggle();
+        $('.login-form').fadeToggle();
+        $('#login-shade').fadeToggle();
     })
 
     // Set height for .msp-wrap .vote (it's absolutely positioned
@@ -99,8 +99,8 @@ $(document).ready(function() {
 
     // Whenever user clicks on #login-shade, it closes the login
     $('#login-shade').click(function() {
-        $(this).hide();
-        $('.login-form').hide();
+        $(this).fadeOut();
+        $('.login-form').fadeOut();
     });
 
 });

@@ -29,6 +29,12 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# LOGIN STUFF
+LOGIN_REDIRECT_URL = '/representME/'
+LOGIN_URL = '/representME/#login'
+LOGOUT_URL = '/representME/logout/'
+
+
 
 # Application definition
 
