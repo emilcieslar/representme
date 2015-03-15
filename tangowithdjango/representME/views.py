@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
+from representME.bing_search import run_query
 
 # Create your views here.
 def computeMatch(user, msp):
@@ -135,6 +136,19 @@ def law(request, law_name):
 
     return render(request, 'representME/law.html', context_dict)
 
+def search(request):
+
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+
+    return render(request, 'representME/search.html', {'result_list': result_list})
+	
 #From Cristina's previous project
 def is_valid(postcode):
     """
