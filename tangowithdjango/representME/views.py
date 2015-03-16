@@ -75,11 +75,11 @@ def get_index_page(user, logged_in):
 def index(request):
 
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
+        return HttpResponseRedirect('/representme/user/'+request.user.username+'/')
 
     context_dict = get_index_page(request.user, False)
 
-    return render(request,'representME/index.html', context_dict)
+    return render(request,'representme/index.html', context_dict)
 
 def law(request, law_name):
     context_dict = {}
@@ -134,7 +134,7 @@ def law(request, law_name):
     except Law.DoesNotExist:
         pass
 
-    return render(request, 'representME/law.html', context_dict)
+    return render(request, 'representme/law.html', context_dict)
 
 def search(request):
 
@@ -147,7 +147,7 @@ def search(request):
             # Run our Bing function to get the results list!
             result_list = run_query(query)
 
-    return render(request, 'representME/search.html', {'result_list': result_list})
+    return render(request, 'representme/search.html', {'result_list': result_list})
 	
 #From Cristina's previous project
 def is_valid(postcode):
@@ -227,7 +227,7 @@ def laws(request):
     except:
         pass
 
-    return render(request, 'representME/laws.html', context_dict)
+    return render(request, 'representme/laws.html', context_dict)
 
 def msps(request):
     context_dict = {}
@@ -239,7 +239,7 @@ def msps(request):
     except:
         pass
 
-    return render(request, 'representME/msps.html', context_dict)
+    return render(request, 'representme/msps.html', context_dict)
 
 @login_required
 def userview(request, username):
@@ -251,7 +251,7 @@ def userview(request, username):
     except User.DoesNotExist:
         pass
 
-    return render(request, 'representME/index-logged.html', context_dict)
+    return render(request, 'representme/index-logged.html', context_dict)
 
 def user_login(request):
     # Context dict containing errors
@@ -279,7 +279,7 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 login(request, user)
-                return HttpResponseRedirect('/representME/')
+                return HttpResponseRedirect('/representme/')
             else:
                 # An inactive account was used - no logging in!
                 return HttpResponse("Your Rango account is disabled.")
@@ -293,7 +293,7 @@ def user_login(request):
     else:
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
-        return render(request, '/representME/#login', {})
+        return render(request, '/representme/#login', {})
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
 @login_required
@@ -302,7 +302,7 @@ def user_logout(request):
     logout(request)
 
     # Take the user back to the homepage.
-    return HttpResponseRedirect('/representME/')
+    return HttpResponseRedirect('/representme/')
 
 def register(request):
 
@@ -336,7 +336,7 @@ def register(request):
             profile.save()
 
             # Go to the login page
-            return HttpResponseRedirect('/representME/#login')
+            return HttpResponseRedirect('/representme/#login')
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
@@ -348,9 +348,9 @@ def register(request):
     # Not a HTTP POST, so we render our form using two ModelForm instances.
     # These forms will be blank, ready for user input.
     else:
-        return HttpResponseRedirect('/representME/')
+        return HttpResponseRedirect('/representme/')
 
     # Render the template depending on the context.
     return render(request,
-            'representME/index.html',
+            'representme/index.html',
             {'user_form': user_form, 'profile_form': profile_form, 'userFormErrors': userFormErrors, 'userProfileFormErrors': userProfileFormErrors} )
