@@ -81,12 +81,13 @@ def get_index_page(user, logged_in):
 
 def index(request):
 
+    #if request.user.is_authenticated():
+        #return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
+
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
+        return render(request,'representme/index-logged.html',get_index_page(request.user, True))
 
-    context_dict = get_index_page(request.user, False)
-
-    return render(request,'representme/index.html', context_dict)
+    return render(request,'representme/index.html', get_index_page(request.user, False))
 
 def law(request, law_name):
     context_dict = {}
@@ -249,6 +250,9 @@ def msps(request):
 
     return render(request, 'representme/msps.html', context_dict)
 
+
+# DEPRECATED
+'''''
 @login_required
 def userview(request, username):
     context_dict = get_index_page(request.user, True)
@@ -258,6 +262,7 @@ def userview(request, username):
         return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
 
     return render(request, 'representme/index-logged.html', context_dict)
+'''''
 
 def user_login(request):
     # Context dict containing errors
@@ -288,11 +293,11 @@ def user_login(request):
                 return HttpResponseRedirect('/representME/')
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponse("Your Rango account is disabled.")
+                return HttpResponseRedirect('/representME/#login-disabled')
         else:
             # Bad login details were provided. So we can't log the user in.
             print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponse("Invalid login details supplied.")
+            return HttpResponseRedirect('/representME/#login-invalid')
 
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.
@@ -327,6 +332,10 @@ def register(request):
             # Save the user's form data to the database.
             user = user_form.save()
 
+            # Set variable that will hold the password that is not encrypted
+            # If we use user.password var after set password, it shows only encrypted one
+            password = user.password
+
             # Now we hash the password with the set_password method.
             # Once hashed, we can update the user object.
             user.set_password(user.password)
@@ -341,14 +350,12 @@ def register(request):
             # Now we save the UserProfile model instance.
             profile.save()
 
-            new_user = authenticate(username=user.username, password=user.password)
+            new_user = authenticate(username=user.username, password=password)
 
-            print(new_user)
-
-            #login(request, new_user)
+            login(request, new_user)
 
             # Go to the login page
-            return HttpResponseRedirect('/representME/#login')
+            return HttpResponseRedirect('/representME/')
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
