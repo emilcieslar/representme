@@ -11,6 +11,10 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
+from representME.bing_search import run_query
+# For the reverse() functionality
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from representME.search import generic_search
 
@@ -302,14 +306,14 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 login(request, user)
-                return HttpResponseRedirect('/representME/')
+                return HttpResponseRedirect(reverse('index'))
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponseRedirect('/representME/#login-disabled')
+                return HttpResponseRedirect(reverse('index') + '#login-disabled')
         else:
             # Bad login details were provided. So we can't log the user in.
             print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponseRedirect('/representME/#login-invalid')
+            return HttpResponseRedirect(reverse('index') + '#login-invalid')
 
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.
@@ -325,7 +329,7 @@ def user_logout(request):
     logout(request)
 
     # Take the user back to the homepage.
-    return HttpResponseRedirect('/representME/')
+    return HttpResponseRedirect(reverse('index'))
 
 def register(request):
 
