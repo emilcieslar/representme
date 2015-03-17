@@ -166,11 +166,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                 display: none;
             }
 
-                .login-form a {
-                    color: white;
-                }
-
-                .login-form input[type=submit], .login-form input[type=text], .login-form input[type=password] {
+                .login-form input[type=submit], .login-form input[type=text], .login-form input[type=password], .login-form a {
                     height: 45px;
                     width: 100%;
                     margin: 20px 0 0 0;
@@ -179,7 +175,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                     font-family: 'Montserrat', sans-serif;
                 }
 
-                .login-form input[type=submit] {
+                .login-form input[type=submit], .login-form a {
                     font-weight: 700;
                     text-align: center;
                     background: #2980b9;
@@ -189,10 +185,23 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                     cursor: pointer;
                 }
 
-                .login-form input[type=submit]:hover {
+                .login-form input[type=submit]:hover, .login-form a:hover {
                     box-shadow: 0px 1px 0px #0070b9;
                     position: relative;
                     top: 2px;
+                }
+
+                .login-form a {
+                    color: white;
+                    display: block;
+                    line-height: 47px;
+                    background: #e74c3c;
+                    box-shadow: 0px 3px 0px #c03f32;
+                    margin-top: 10px;
+                }
+
+                .login-form a:hover {
+                    box-shadow: 0px 1px 0px #c03f32;
                 }
 
     .header .menu-icon {

@@ -43,10 +43,17 @@ def get_index_page(user, logged_in):
 
     # same for comments
     latest_comments_results = []
-    latest_comments = Comment.objects.order_by('-time')[:10]
+    # If user is logged in, load only the user's comments
+    if logged_in:
+        latest_comments = Comment.objects.filter(user=user).order_by('-time')[:10]
+    # Otherwise, load all because we're on the index not logged in page
+    else:
+        latest_comments = Comment.objects.order_by('-time')[:10]
+
     for comment in latest_comments:
         comment_excerpt = comment.text[:200]
         latest_comments_results.append([comment, comment_excerpt])
+
 
 
     context_dict['latest_laws'] = latest_laws_results
@@ -79,7 +86,7 @@ def index(request):
 
     context_dict = get_index_page(request.user, False)
 
-    return render(request,'representME/index.html', context_dict)
+    return render(request,'representme/index.html', context_dict)
 
 def law(request, law_name):
     context_dict = {}
@@ -109,6 +116,7 @@ def law(request, law_name):
             user_msps = get_msps(this_user.postcode)
         else:
             user_msps = {}
+            this_user = -1
 
         # have an empty dictionary that will contain tuples
         user_msps_results = []
@@ -134,7 +142,7 @@ def law(request, law_name):
     except Law.DoesNotExist:
         pass
 
-    return render(request, 'representME/law.html', context_dict)
+    return render(request, 'representme/law.html', context_dict)
 
 def search(request):
 
@@ -147,8 +155,8 @@ def search(request):
             # Run our Bing function to get the results list!
             result_list = run_query(query)
 
-    return render(request, 'representME/search.html', {'result_list': result_list})
-
+    return render(request, 'representme/search.html', {'result_list': result_list})
+	
 #From Cristina's previous project
 def is_valid(postcode):
     """
@@ -227,7 +235,7 @@ def laws(request):
     except:
         pass
 
-    return render(request, 'representME/laws.html', context_dict)
+    return render(request, 'representme/laws.html', context_dict)
 
 def msps(request):
     context_dict = {}
@@ -239,19 +247,17 @@ def msps(request):
     except:
         pass
 
-    return render(request, 'representME/msps.html', context_dict)
+    return render(request, 'representme/msps.html', context_dict)
 
 @login_required
 def userview(request, username):
     context_dict = get_index_page(request.user, True)
 
-    try:
-        userObj = User.objects.get(username=username)
-        context_dict['user'] = userObj
-    except User.DoesNotExist:
-        pass
+    # If user tries to access another users profile, go back to his/her profile
+    if username != request.user.username:
+        return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
 
-    return render(request, 'representME/index-logged.html', context_dict)
+    return render(request, 'representme/index-logged.html', context_dict)
 
 def user_login(request):
     # Context dict containing errors
@@ -260,9 +266,9 @@ def user_login(request):
     if request.method == 'POST':
         # Gather the username and password provided by the user.
         # This information is obtained from the login form.
-                # We use request.POST.get('<variable>') as opposed to request.POST['<variable>'],
-                # because the request.POST.get('<variable>') returns None, if the value does not exist,
-                # while the request.POST['<variable>'] will raise key error exception
+        # We use request.POST.get('<variable>') as opposed to request.POST['<variable>'],
+        # because the request.POST.get('<variable>') returns None, if the value does not exist,
+        # while the request.POST['<variable>'] will raise key error exception
         username = request.POST.get('username')
         password = request.POST.get('password')
 
@@ -293,7 +299,7 @@ def user_login(request):
     else:
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
-        return render(request, '/representME/#login', {})
+        return render(request, '/representme/#login', {})
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
 @login_required
@@ -304,52 +310,7 @@ def user_logout(request):
     # Take the user back to the homepage.
     return HttpResponseRedirect('/representME/')
 
-def user_login(request):
-    # Context dict containing errors
-    context_dict = {}
-    # If the request is a HTTP POST, try to pull out the relevant information.
-    if request.method == 'POST':
-        # Gather the username and password provided by the user.
-        # This information is obtained from the login form.
-                # We use request.POST.get('<variable>') as opposed to request.POST['<variable>'],
-                # because the request.POST.get('<variable>') returns None, if the value does not exist,
-                # while the request.POST['<variable>'] will raise key error exception
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        # Use Django's machinery to attempt to see if the username/password
-        # combination is valid - a User object is returned if it is.
-        user = authenticate(username=username, password=password)
-
-        # If we have a User object, the details are correct.
-        # If None (Python's way of representing the absence of a value), no user
-        # with matching credentials was found.
-        if user:
-            # Is the account active? It could have been disabled.
-            if user.is_active:
-                # If the account is valid and active, we can log the user in.
-                # We'll send the user back to the homepage.
-                login(request, user)
-                return HttpResponseRedirect('/representME/')
-            else:
-                # An inactive account was used - no logging in!
-                return HttpResponseRedirect('/representME/#login-disabled')
-        else:
-            # Bad login details were provided. So we can't log the user in.
-            print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponseRedirect('/representME/#login-invalid')
-
-    # The request is not a HTTP POST, so display the login form.
-    # This scenario would most likely be a HTTP GET.
-    else:
-        # Redirect to the home page
-        return HttpResponseRedirect('/representME/')
-
 def register(request):
-
-    # A boolean value for telling the template whether the registration was successful.
-    # Set to False initially. Code changes value to True when registration succeeds.
-    registered = False
 
     userFormErrors = False
     userProfileFormErrors = False
@@ -380,10 +341,14 @@ def register(request):
             # Now we save the UserProfile model instance.
             profile.save()
 
-            # Update our variable to tell the template registration was successful.
-            registered = True
+            new_user = authenticate(username=user.username, password=user.password)
 
-            return HttpResponseRedirect('/representME/user/'+user.username+'/')
+            print(new_user)
+
+            #login(request, new_user)
+
+            # Go to the login page
+            return HttpResponseRedirect('/representME/#login')
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
@@ -399,5 +364,5 @@ def register(request):
 
     # Render the template depending on the context.
     return render(request,
-            'representME/index.html',
-            {'user_form': user_form, 'profile_form': profile_form, 'registered': registered, 'userFormErrors': userFormErrors, 'userProfileFormErrors': userProfileFormErrors} )
+            'representme/index.html',
+            {'user_form': user_form, 'profile_form': profile_form, 'userFormErrors': userFormErrors, 'userProfileFormErrors': userProfileFormErrors} )

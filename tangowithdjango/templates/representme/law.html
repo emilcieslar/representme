@@ -117,10 +117,11 @@
                     {% if user.is_authenticated %}
                     Commeting as {{ user.username }}
                     {% else %}
-                    <a href="#">Log in</a> to comment
+                    <a href="#login">Log in</a> to comment
                     {% endif %}
                 </div>
             </div>
+            {% if user.is_authenticated %}
             <div class="textarea">
                 <form id="comment_form" method="post" action="/representME/add_comment/">
                     {% csrf_token %}
@@ -129,12 +130,13 @@
                     <input type="submit" name="send-comment" value="" />
                 </form>
             </div><!-- .textarea -->
+            {% endif %}
             <div class="latest-laws-wrapper-inner" id="comments-wrapper">
                 {% if comments %}
                     {% for comment in comments %}
 
                         <div class="latest-law">
-                            <h3>{{ comment.user }} &nbsp;&nbsp;<span>{{ comment.time }}</span></h3>
+                            <h3>{{ comment.user }} &nbsp;&nbsp;<span>{{ comment.time|date:"d/m/Y - H.i" }}</span></h3>
                             <p>{{ comment.text }}</p>
                         </div><!-- .latest-law -->
 

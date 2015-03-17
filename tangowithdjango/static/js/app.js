@@ -21,8 +21,8 @@ $(document).ready(function() {
 
     // Show and hide log in form
     $('.login-link').click(function() {
-        $('.login-form').toggle();
-        $('#login-shade').toggle();
+        $('.login-form').fadeToggle();
+        $('#login-shade').fadeToggle();
     })
 
     // Set height for .msp-wrap .vote (it's absolutely positioned
@@ -84,23 +84,34 @@ $(document).ready(function() {
     }
 
     // Check whether we have to display login form
-    var hashValue = location.hash;
-    if(hashValue == "#login") {
-        displayLogin();
-    } else if(hashValue == "#login-invalid") {
-        displayLogin();
-        $('.login-invalid').show();
-    } else if(hashValue == "#login-disabled") {
-        displayLogin();
-        $('.login-disabled').show();
+    // We will reuse this function in onhashchange as well
+    var displayLogIn = function() {
+
+        var hashValue = location.hash;
+        if (hashValue == "#login") {
+            displayLogin();
+        } else if (hashValue == "#login-invalid") {
+            displayLogin();
+            $('.login-invalid').show();
+        } else if (hashValue == "#login-disabled") {
+            displayLogin();
+            $('.login-disabled').show();
+        }
+
     }
 
+    // Check for displaying at document ready
+    displayLogIn();
+
+    $(window).on('hashchange', function() {
+        displayLogIn();
+    });
 
 
     // Whenever user clicks on #login-shade, it closes the login
     $('#login-shade').click(function() {
-        $(this).hide();
-        $('.login-form').hide();
+        $(this).fadeOut();
+        $('.login-form').fadeOut();
     });
 
 });
