@@ -60,7 +60,6 @@
                             <div class="latest-law">
                             <a href="{% url "law" law.name %}">
                                 <h3>{{ law.name }} &nbsp;&nbsp;<span> {{ law.topic }}</span></h3>
-
                                 <p>{{ law_excerpt }}...</p>
                             </a>
                             </div><!-- .latest-law -->
@@ -77,10 +76,11 @@
                     <div class="latest-laws-wrapper-inner">
                         {% for comment, comment_excerpt in latest_comments %}
                             <div class="latest-law">
-                                <h3> {{ comment.user.username }} on &nbsp;&nbsp;<span>{{ comment.law }}</span> at
-                                    <span>{{ comment.time }}</span></h3>
-
+                            <a href="{% url "law" comment.law %}">
+                                <h3> {{ comment.user.username }} on &nbsp;<span>{{ comment.law }}</span> &nbsp;at
+                                    &nbsp;<span>{{ comment.time|date:"d/m/Y - H.i" }}</span></h3>
                                 <p>{{ comment_excerpt }}...</p>
+                            </a>
                             </div><!-- .latest-comment -->
                         {% endfor %}
                     </div>

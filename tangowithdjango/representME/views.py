@@ -43,10 +43,17 @@ def get_index_page(user, logged_in):
 
     # same for comments
     latest_comments_results = []
-    latest_comments = Comment.objects.order_by('-time')[:10]
+    # If user is logged in, load only the user's comments
+    if logged_in:
+        latest_comments = Comment.objects.filter(user=user).order_by('-time')[:10]
+    # Otherwise, load all because we're on the index not logged in page
+    else:
+        latest_comments = Comment.objects.order_by('-time')[:10]
+
     for comment in latest_comments:
         comment_excerpt = comment.text[:200]
         latest_comments_results.append([comment, comment_excerpt])
+
 
 
     context_dict['latest_laws'] = latest_laws_results
@@ -75,7 +82,7 @@ def get_index_page(user, logged_in):
 def index(request):
 
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/representme/user/'+request.user.username+'/')
+        return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
 
     context_dict = get_index_page(request.user, False)
 
@@ -109,6 +116,7 @@ def law(request, law_name):
             user_msps = get_msps(this_user.postcode)
         else:
             user_msps = {}
+            this_user = -1
 
         # have an empty dictionary that will contain tuples
         user_msps_results = []
@@ -245,11 +253,9 @@ def msps(request):
 def userview(request, username):
     context_dict = get_index_page(request.user, True)
 
-    try:
-        userObj = User.objects.get(username=username)
-        context_dict['user'] = userObj
-    except User.DoesNotExist:
-        pass
+    # If user tries to access another users profile, go back to his/her profile
+    if username != request.user.username:
+        return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
 
     return render(request, 'representme/index-logged.html', context_dict)
 
@@ -279,7 +285,7 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 login(request, user)
-                return HttpResponseRedirect('/representme/')
+                return HttpResponseRedirect('/representME/')
             else:
                 # An inactive account was used - no logging in!
                 return HttpResponse("Your Rango account is disabled.")
@@ -302,7 +308,7 @@ def user_logout(request):
     logout(request)
 
     # Take the user back to the homepage.
-    return HttpResponseRedirect('/representme/')
+    return HttpResponseRedirect('/representME/')
 
 def register(request):
 
@@ -335,8 +341,14 @@ def register(request):
             # Now we save the UserProfile model instance.
             profile.save()
 
+            new_user = authenticate(username=user.username, password=user.password)
+
+            print(new_user)
+
+            #login(request, new_user)
+
             # Go to the login page
-            return HttpResponseRedirect('/representme/#login')
+            return HttpResponseRedirect('/representME/#login')
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
@@ -348,7 +360,7 @@ def register(request):
     # Not a HTTP POST, so we render our form using two ModelForm instances.
     # These forms will be blank, ready for user input.
     else:
-        return HttpResponseRedirect('/representme/')
+        return HttpResponseRedirect('/representME/')
 
     # Render the template depending on the context.
     return render(request,
