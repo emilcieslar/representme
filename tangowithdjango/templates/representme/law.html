@@ -25,14 +25,14 @@
                 <div class="tag">{{ law.topic }}</div>
                 <div class="tag upcoming">{{ upcoming }}</div>
 
-                <div class="right-side">
+                <div class="right-side" data-lawid="{{ law.id }}">
                     {% if user.is_authenticated %}
                         {% if user_vote.voted %}
                             <div class="against number">{{ votes_against }}</div>
                             <div class="approve number">{{ votes_for }}</div>
                         {% else %}
-                            <div class="against"></div>
-                            <div class="approve"></div>
+                            <div class="user_vote against">{{ votes_against }}</div>
+                            <div class="user_vote approve">{{ votes_for }}</div>
                         {% endif %}
                     {% else %}
                         <div class="against number">{{ votes_against }}</div>

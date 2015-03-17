@@ -517,6 +517,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                     font-size: 20px;
                     color: white;
                     line-height: 45px;
+                    text-indent: -10000px;
                 }
 
                 .content-inner .content-inner-header .right-side div.against {
@@ -556,6 +557,10 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
                 .content-inner .content-inner-header .right-side div.number:hover {
                     top: auto;
+                }
+
+                .content-inner .content-inner-header .right-side div.number {
+                    text-indent: 0;
                 }
 
 

@@ -16,7 +16,7 @@ from representME.bing_search import run_query
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
-from representME.search import generic_search
+#from representME.search import generic_search
 
 # Create your views here.
 def computeMatch(user, msp):
@@ -389,3 +389,55 @@ def register(request):
     return render(request,
             'representme/index.html',
             {'user_form': user_form, 'profile_form': profile_form, 'userFormErrors': userFormErrors, 'userProfileFormErrors': userProfileFormErrors} )
+
+
+'''''
+User Vote CLICK
+'''''
+@login_required
+def user_vote(request):
+
+    law_id = None
+    vote = None
+
+    # If the request method is get, set law_id and vote
+    if request.method == 'GET':
+        law_id = request.GET['law_id']
+        vote = request.GET['vote']
+
+    # Convert vote to proper boolean
+    if vote == 'true':
+        vote = True
+    else:
+        vote = False
+
+    # Get law object from database
+    law = Law.objects.get(id=int(law_id))
+
+    # If something goes bad, we don't wanna update the HTML
+    success = False
+
+    # If law_id was set up correctly
+    if law_id:
+        # Get the user vote if exists
+        user_law_vote = UserVote.objects.filter(user=request.user, law=law)
+        # If it exists
+        if user_law_vote:
+            # Set vote for whatever user voted
+            user_law_vote.voted_for = vote
+            # Save the model
+            user_law_vote.save()
+            # We were successful this time!
+            success = True
+        # Otherwise create a new vote
+        else:
+            try:
+                query = UserVote(user=request.user, law=law, voted=True, vote_for=vote)
+                query.save()
+                # Again success!
+                success = True
+            except:
+                pass
+
+    # Return whether we were successful or not
+    return HttpResponse(success)

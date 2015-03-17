@@ -36,7 +36,48 @@ $(document).ready(function() {
         }
     });
 
+    // Add or update a user vote in the database
+    ////////////////////////////////////////////
+    $('.user_vote').click(function() {
+
+        // Get law-id
+        var lawid = $(this).parent().attr('data-lawid');
+
+        // Get whether user voted for or against
+        var user_for = false;
+        if($(this).hasClass('approve')) {
+            user_for = true;
+        }
+
+        $.get('/representME/user_vote/', {law_id: lawid, vote: user_for}, function(data){
+            // If we were successful during the process of adding user vote to database
+            if(data == "True") {
+                // Update the HTML accordingly
+                // Here we have to update the number of votes
+                if(user_for) {
+                    // Update number of votes
+                    var number = parseInt($('.user_vote.approve').text()) + 1;
+                    $('.user_vote.approve').text(number);
+                    // Update your-vote
+                    $('.your-vote').addClass('yes');
+                } else {
+                    // Update number of votes
+                    var number = parseInt($('.user_vote.against').text()) + 1;
+                    $('.user_vote.against').text(number);
+                    // Update your-vote
+                    $('.your-vote').addClass('no');
+                }
+
+                // Display numbers
+                $('.user_vote').addClass('number');
+            }
+        });
+
+    });
+
+
     // Add a comment to the database
+    ////////////////////////////////
     $('input[name=send-comment]').click(function(e) {
         // Stop from default behaviour (sending a form using POST request)
         e.preventDefault();

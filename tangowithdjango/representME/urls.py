@@ -18,4 +18,5 @@ urlpatterns = patterns('',
         url(r'^msps/$', views.msps, name='msps'),
         url(r'^logout/$', views.user_logout, name='logout'),
 		url(r'^search/$', views.search, name='search'),
+        url(r'^user_vote/$', views.user_vote, name='user_vote'),
 )
