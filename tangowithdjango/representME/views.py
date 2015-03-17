@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from django.shortcuts import render
+from django.shortcuts import render,render_to_response
 import json
 import re
 
@@ -11,7 +11,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
-from representME.bing_search import run_query
+from django.template import RequestContext
+from representME.search import generic_search
 
 # Create your views here.
 def computeMatch(user, msp):
@@ -146,17 +147,28 @@ def law(request, law_name):
     return render(request, 'representme/law.html', context_dict)
 
 def search(request):
-
-    result_list = []
+    context_dict = {}
 
     if request.method == 'POST':
-        query = request.POST['query'].strip()
+        # Gather the username and password provided by the user.
+        # This information is obtained from the login form.
+        # We use request.POST.get('<variable>') as opposed to request.POST['<variable>'],
+        # because the request.POST.get('<variable>') returns None, if the value does not exist,
+        # while the request.POST['<variable>'] will raise key error exception
+        query_string = request.POST.get('q')
 
-        if query:
-            # Run our Bing function to get the results list!
-            result_list = run_query(query)
+        search_results = Law.objects.filter(topic__contains=query_string)
 
-    return render(request, 'representme/search.html', {'result_list': result_list})
+        context_dict = {'search_results': search_results, 'query_string': query_string}
+
+        return render(request, 'representme/search.html', context_dict)
+
+    else:
+        # No context variables to pass to the template system, hence the
+        # blank dictionary object...
+        return render(request, 'representme/search.html', {})
+
+
 	
 #From Cristina's previous project
 def is_valid(postcode):
