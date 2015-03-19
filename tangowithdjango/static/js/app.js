@@ -75,6 +75,20 @@ $(document).ready(function() {
 
     });
 
+    // Edit a comment
+    ////////////////////////////////
+    $('.edit-comment').click(function() {
+
+        // Get the comment text
+        var text = $(this).parent().parent().find('p').text();
+        // Place the text to the textarea
+        $('#comment_form textarea').val(text);
+        // Change data-editid to the id of the comment
+        // TODO: Don't forget to empty data-editid after adding a comment
+        $('#comment_form').attr('data-editid','something');
+
+    });
+
 
     // Add a comment to the database
     ////////////////////////////////
@@ -85,33 +99,43 @@ $(document).ready(function() {
         var text;
         text = $.trim($('#comment_form textarea').val());
 
+        var law_id;
+        law_id = $('#comment_form').attr('data-lawid');
+
         // If the comment is not empty
         if(text.length != 0) {
 
-            // If we're adding first comment
-            if($(".no-comments").length != 0) {
-                $(".no-comments").remove();
-            }
+            // Post comment to the view and wait for the answer
+            $.get('/representME/add_comment/', {text: text, law_id: law_id}, function(data){
+                // If we were successful during the process of adding user vote to database
+                if(data != "False") {
 
-            // Add the comment to the wrapper
-            $('#comments-wrapper').prepend('<div class="latest-law" style="display: none"><h3>Emil Cieslar &nbsp;&nbsp;<span>Datum a cas</span></h3><p>' + text + '</p></div><!-- .latest-law -->');
-            // After the HTML is added, display it nicely
-            $('#comments-wrapper .latest-law').fadeIn('slow');
+                    // If we're adding first comment
+                    if($(".no-comments").length != 0) {
+                        $(".no-comments").remove();
+                    }
 
-            // Increase commends number
-            $('#comments_number').text(parseInt($('#comments_number').text())+1);
+                    // Add the comment to the wrapper
+                    $('#comments-wrapper').prepend('<div data-userid="" class="latest-law" style="display: none"><h3>Emil Cieslar &nbsp;&nbsp;<span>' + data + '</span> &nbsp;&nbsp;<span>Edit</span></h3><p>' + text + '</p></div><!-- .latest-law -->');
+                    // After the HTML is added, display it nicely
+                    $('#comments-wrapper .latest-law').fadeIn('slow');
 
-            // Clear the text in the commend text field
-            $('#comment_form textarea').val('');
+                    // Increase commends number
+                    $('#comments_number').text(parseInt($('#comments_number').text())+1);
+
+                    // Clear the text in the commend text field
+                    $('#comment_form textarea').val('');
+
+                }
+            });
+
+
 
         } else {
             alert("Empty comment.");
         }
 
-    /*$.get('/rango/add_comment/', {text: text}, function(data){
-               $('#like_count').html(data);
-               $('#likes').hide();
-    });*/
+
 
     });
 

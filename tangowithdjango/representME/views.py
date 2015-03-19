@@ -115,13 +115,18 @@ def law(request, law_name):
         context_dict['comments'] = comments
         context_dict['comments_number'] = comments.count()
 
+        user_msps = {}
+
         # you need request.user to access the django user stuff
         if request.user.is_authenticated():
             # you use this to get the Userprofile data associated with this user
             this_user = UserProfile.objects.get(user=request.user)
+            # -------------------------------------------------------------------------
+            # EDIT THIS WHEN CONNECTED TO INTERNET AGAIN
+            # -------------------------------------------------------------------------
+            # THIS DOES NOT WORK WITHOUT INTERNET CONNECTION
             user_msps = get_msps(this_user.postcode)
         else:
-            user_msps = {}
             this_user = -1
 
         # have an empty dictionary that will contain tuples
@@ -391,9 +396,9 @@ def register(request):
             {'user_form': user_form, 'profile_form': profile_form, 'userFormErrors': userFormErrors, 'userProfileFormErrors': userProfileFormErrors} )
 
 
-'''''
+'''
 User Vote CLICK
-'''''
+'''
 @login_required
 def user_vote(request):
 
@@ -441,3 +446,55 @@ def user_vote(request):
 
     # Return whether we were successful or not
     return HttpResponse(success)
+
+
+'''''
+Add comment
+'''''
+@login_required
+def add_comment(request):
+
+    law_id = None
+    text = None
+
+    # If the request method is get, set law_id and vote
+    if request.method == 'GET':
+        law_id = request.GET['law_id']
+        text = request.GET['text']
+
+    # Get law object from database
+    law = Law.objects.get(id=int(law_id))
+
+    # If something goes bad, we don't wanna update the HTML
+    output = False
+
+    # If law_id was set up correctly then we can suppose
+    # that text was set up correct as well
+    if law_id:
+        # Get the user vote if exists
+        #user_law_vote = UserVote.objects.filter(user=request.user, law=law)
+        # If it exists
+        #if user_law_vote:
+        #    # Set vote for whatever user voted
+        #    user_law_vote.voted_for = vote
+        #    # Save the model
+        #    user_law_vote.save()
+        #    # We were successful this time!
+        #    success = True
+        # Otherwise create a new vote
+        #else:
+        try:
+            # Save the comment to the database
+            query = Comment(user=request.user, law=law, text=text)
+            query.save()
+            # Get the date that was generated when comment was created
+            # This should be really easy, just don't have connection now
+            # TODO: In fact here I have to return date and comment-id for editing purposes
+
+            # Again success!
+            output = "here will be date"
+        except:
+            pass
+
+    # Return whether we were successful or not
+    return HttpResponse(output)

@@ -8,7 +8,7 @@
     <div class="row main-content">
 
         <div class="breadcrumbs-wrapper">
-            <li><a href="#">Home</a></li>
+            <li><a href="{% url 'index' %}">Home</a></li>
             <li><a href="{% url 'laws' %}">Laws</a></li>
             <li>{{ law.name }}</li>
         </div><!-- .breadcrumbs-wrapper -->
@@ -123,7 +123,8 @@
             </div>
             {% if user.is_authenticated %}
             <div class="textarea">
-                <form id="comment_form" method="post" action="/representME/add_comment/">
+                <!-- data-editid is empty by default, but if a user clicks on edit button, data-editid will be filled up with id of the comment -->
+                <form id="comment_form" method="post" action="/representME/add_comment/" data-lawid="{{ law.id }}" data-editid="">
                     {% csrf_token %}
                     {{ commentForm.text }}
                     <!--<textarea name="comment-text" placeholder="Add your message here..."></textarea>-->
@@ -135,8 +136,8 @@
                 {% if comments %}
                     {% for comment in comments %}
 
-                        <div class="latest-law">
-                            <h3>{{ comment.user }} &nbsp;&nbsp;<span>{{ comment.time|date:"d/m/Y - H.i" }}</span></h3>
+                        <div class="latest-law" data-userid="{{ comment.user }}">
+                            <h3>{{ comment.user }} &nbsp;&nbsp;<span>{{ comment.time|date:"d/m/Y - H.i" }}</span>{% if comment.user == user %} &nbsp;&nbsp;<span class="edit-comment">Edit</span>{% endif %}</h3>
                             <p>{{ comment.text }}</p>
                         </div><!-- .latest-law -->
 

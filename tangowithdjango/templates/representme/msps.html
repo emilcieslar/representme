@@ -8,8 +8,8 @@
     <div class="row main-content">
 
         <div class="breadcrumbs-wrapper">
-            <li><a href="#">Home</a></li>
-            <!--            <li>Laws</li> -->
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li>MSPs</li>
         </div><!-- .breadcrumbs-wrapper -->
 
         <div class="index-search-wrapper search">
@@ -22,10 +22,10 @@
                 {% if msps %}
 
                     <tr>
-                        <th>Name of the law</th>
-                        <th>Topic</th>
-                        <th>Date</th>
-                        <th>Result</th>
+                        <th>MSP</th>
+                        <th>Name</th>
+                        <th class="hide-for-small">Constituency</th>
+                        <th class="hide-for-small">Party</th>
                     </tr>
 
                     {% for msp in msps %}
@@ -34,8 +34,8 @@
                             <td><img width="50%" src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg""/>
                             </td>
                             <td>{{ msp.firstname }} {{ msp.lastname }}</td>
-                            <td>{{ msp.constituency }}</td>
-                            <td>{{ msp.party }}</td>
+                            <td class="hide-for-small">{{ msp.constituency }}</td>
+                            <td class="hide-for-small">{{ msp.party }}</td>
                         </tr>
 
                     {% endfor %}
