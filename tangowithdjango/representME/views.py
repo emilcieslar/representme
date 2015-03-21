@@ -100,8 +100,80 @@ def index(request):
 MSP page
 '''
 def msp(request, msp_name):
+    #assume MSP name is entered as 'firstname_surname'
+    names = msp_name.split('_')
+
+    #now get first and surnames
+    fname = names[0]
+    sname = names[1]
 
     context_dict = {}
+
+    try:
+        #try to retrieve MSP with matching first and last name
+        msp = MSP.objects.get(firstname=fname, lastname=sname)
+
+        #get msp's first and surnames
+        context_dict['first_name'] = msp.firstname
+        context_dict['last_name'] = msp.lastname
+
+        user_msps = []
+
+        #get user's MSPs and store in user_msps
+        # you need request.user to access the django user stuff
+        if request.user.is_authenticated():
+
+            this_user = UserProfile.objects.get(user=request.user)
+
+            user_msps = get_msps(this_user.postcode)
+
+        else:
+            user_msps = []
+
+        #whether it is the user's msp or not
+        for msp in user_msps:
+            if msp == msp:
+                context_dict['is_my_msp'] = "True"
+            else:
+                context_dict['is_my_msp'] = "False"
+
+        #get msp's constituency
+        context_dict['constituency'] = msp.constituency
+
+        #get msp's party
+        context_dict['political_party'] = msp.party
+
+        #get msp's presence
+        context_dict['presence'] = msp.presence
+
+        #get msp's image
+        context_dict['image'] = msp.img
+
+        #get laws msp has voted on as dictionary
+        laws_dict = {}
+
+        #try to get msp votes
+        try:
+            msp_votes = MSPVote.objects.get(msp = msp)
+            #for each vote, get info on law and whether they were for/against
+            for vote in msp_votes:
+                laws_dict['law_name'] = vote.law.name
+                laws_dict['law_topic'] = vote.law.topic
+                laws_dict['law_text'] = vote.law.text
+                laws_dict['law_vote'] = vote.vote
+
+        except MSPVote.DoesNotExist:
+            msp_laws = []
+
+
+        context_dict['msp_laws'] = laws_dict
+
+    except MSP.DoesNotExist:
+        pass
+
+    #not sure what to do if this happens!
+    except MSP.MultipleObjectsReturned:
+        pass
 
     return render(request,'representme/msp.html', context_dict)
 
