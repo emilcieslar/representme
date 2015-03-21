@@ -103,21 +103,15 @@ def msp(request, msp_name):
     #assume MSP name is entered as 'firstname_surname'
     names = msp_name.split('-')
 
-    #now get first and surnames
-    fname = names[0]
-    sname = names[1]
-
-    print fname + " " + sname
+    print names[0] + " " + names[1]
 
     context_dict = {}
 
     try:
         #try to retrieve MSP with matching first and last name
-        msp = MSP.objects.get(firstname__iexact=fname, lastname__iexact=sname)
+        msp = MSP.objects.get(firstname__iexact=names[0], lastname__iexact=names[1])
 
-        #get msp's first and surnames
-        context_dict['first_name'] = msp.firstname
-        context_dict['last_name'] = msp.lastname
+        context_dict['msp'] = msp
 
         user_msps = []
 
@@ -139,18 +133,6 @@ def msp(request, msp_name):
                 break
             else:
                 context_dict['is_my_msp'] = False
-
-        #get msp's constituency
-        context_dict['constituency'] = msp.constituency
-
-        #get msp's party
-        context_dict['political_party'] = msp.party
-
-        #get msp's presence
-        context_dict['presence'] = msp.presence
-
-        #get msp's image
-        context_dict['image'] = msp.img
 
         #get laws msp has voted on as dictionary
         laws_dict = {}
