@@ -96,6 +96,15 @@ def index(request):
 
     return render(request,'representme/index.html', get_index_page(request.user, False))
 
+'''
+MSP page
+'''
+def msp(request, msp_name):
+
+    context_dict = {}
+
+    return render(request,'representme/msp.html', context_dict)
+
 def law(request, law_name):
     context_dict = {}
 
