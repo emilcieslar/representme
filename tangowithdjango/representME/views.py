@@ -4,7 +4,7 @@ import json
 import re
 
 import requests
-from representME.models import Law, Comment, UserVote, Constituency, MSP, UserProfile, MSPVote
+from representME.models import Law, Comment, UserVote, Constituency, MSP, UserProfile, MSPVote, Position
 from representME.forms import UserForm, UserProfileForm, LawCommentForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
@@ -146,7 +146,14 @@ def msp(request, msp_name):
             pass
         context_dict['msp_laws'] = laws
 
+        positions = []
+        try:
+            positions = Position.objects.filter(msp=msp)
+        except Position.DoesNotExist:
+            pass
 
+        print positions
+        context_dict['msp_positions'] = positions
 
     except MSP.DoesNotExist:
         pass

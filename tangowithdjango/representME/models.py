@@ -122,7 +122,7 @@ class Position(models.Model):
     enddate = models.DateField()
 
     def __unicode__(self):
-        return u'%s: %s - %s'(self.name, self.startdate, self.enddate)
+        return u'%s: %s - %s' % (self.name, self.startdate, self.enddate)
 
 class MSPVote(models.Model):
     """
