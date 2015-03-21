@@ -421,6 +421,14 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                     border-radius: 2px;
                 }
 
+                .latest-law h3 span.edit-comment {
+                    cursor: pointer;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                    user-select: none;
+                }
+
             .latest-law p {
                 color: #2980b9;
                 font-size: 14px;

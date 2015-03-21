@@ -85,7 +85,11 @@ $(document).ready(function() {
         $('#comment_form textarea').val(text);
         // Change data-editid to the id of the comment
         // TODO: Don't forget to empty data-editid after adding a comment
-        $('#comment_form').attr('data-editid','something');
+        // TODO: What if a user removes the edited text and starts writing a new one, editid will stay the same
+        $('#comment_form').attr('data-editid',$(this).attr('data-commentid'));
+
+        // Scroll up
+        $("html, body").animate({ scrollTop: $('#id_text').offset().top }, 500);
 
     });
 
@@ -110,13 +114,16 @@ $(document).ready(function() {
                 // If we were successful during the process of adding user vote to database
                 if(data != "False") {
 
+                    // Empty data-editid in comment form
+                    $('#comment_form').attr('data-editid','');
+
                     // If we're adding first comment
                     if($(".no-comments").length != 0) {
                         $(".no-comments").remove();
                     }
 
                     // Add the comment to the wrapper
-                    $('#comments-wrapper').prepend('<div data-userid="" class="latest-law" style="display: none"><h3>Emil Cieslar &nbsp;&nbsp;<span>' + data + '</span> &nbsp;&nbsp;<span>Edit</span></h3><p>' + text + '</p></div><!-- .latest-law -->');
+                    $('#comments-wrapper').prepend('<div data-userid="" class="latest-law" style="display: none"><h3>Emil Cieslar &nbsp;&nbsp;<span>' + data['date'] + '</span> &nbsp;&nbsp;<span class="edit-comment" data-commentid="' + data['id'] + '">Edit</span></h3><p>' + text + '</p></div><!-- .latest-law -->');
                     // After the HTML is added, display it nicely
                     $('#comments-wrapper .latest-law').fadeIn('slow');
 
@@ -129,15 +136,13 @@ $(document).ready(function() {
                 }
             });
 
-
-
         } else {
             alert("Empty comment.");
         }
 
-
-
     });
+
+
 
     // Set height for #login-shade at load of document (will be re-set on resize)
     $('#login-shade').height($(window).height());

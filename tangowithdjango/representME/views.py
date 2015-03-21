@@ -19,6 +19,7 @@ from django.template import RequestContext
 #from representME.search import generic_search
 from itertools import chain
 
+
 # Create your views here.
 def computeMatch(user, msp):
     return 0
@@ -501,9 +502,15 @@ def add_comment(request):
             # TODO: In fact here I have to return date and comment-id for editing purposes
 
             # Again success!
-            output = "here will be date"
+            output = json.dumps({"date": query.time.strftime("%d/%m/%Y %H.%M"),"id": query.id})
+            print output
         except:
             pass
 
-    # Return whether we were successful or not
-    return HttpResponse(output)
+        # Return whether we were successful or not
+        if output != False:
+            # In case of success, return json
+            return HttpResponse(output, content_type='application/json; charset=utf8')
+        else:
+            return HttpResponse(output)
+
