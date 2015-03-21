@@ -101,17 +101,19 @@ MSP page
 '''
 def msp(request, msp_name):
     #assume MSP name is entered as 'firstname_surname'
-    names = msp_name.split('_')
+    names = msp_name.split('-')
 
     #now get first and surnames
     fname = names[0]
     sname = names[1]
 
+    print fname + " " + sname
+
     context_dict = {}
 
     try:
         #try to retrieve MSP with matching first and last name
-        msp = MSP.objects.get(firstname=fname, lastname=sname)
+        msp = MSP.objects.get(firstname__iexact=fname, lastname__iexact=sname)
 
         #get msp's first and surnames
         context_dict['first_name'] = msp.firstname
@@ -131,11 +133,12 @@ def msp(request, msp_name):
             user_msps = []
 
         #whether it is the user's msp or not
-        for msp in user_msps:
-            if msp == msp:
-                context_dict['is_my_msp'] = "True"
+        for user_msp in user_msps:
+            if user_msp == msp:
+                context_dict['is_my_msp'] = True
+                break
             else:
-                context_dict['is_my_msp'] = "False"
+                context_dict['is_my_msp'] = False
 
         #get msp's constituency
         context_dict['constituency'] = msp.constituency
@@ -154,17 +157,12 @@ def msp(request, msp_name):
 
         #try to get msp votes
         try:
-            msp_votes = MSPVote.objects.get(msp = msp)
-            #for each vote, get info on law and whether they were for/against
-            for vote in msp_votes:
-                laws_dict['law_name'] = vote.law.name
-                laws_dict['law_topic'] = vote.law.topic
-                laws_dict['law_text'] = vote.law.text
-                laws_dict['law_vote'] = vote.vote
+            laws_dict = MSPVote.objects.filter(msp=msp)
 
         except MSPVote.DoesNotExist:
-            msp_laws = []
+            pass
 
+        print laws_dict
 
         context_dict['msp_laws'] = laws_dict
 
@@ -174,6 +172,8 @@ def msp(request, msp_name):
     #not sure what to do if this happens!
     except MSP.MultipleObjectsReturned:
         pass
+
+    print context_dict
 
     return render(request,'representme/msp.html', context_dict)
 
@@ -582,13 +582,12 @@ def add_comment(request):
             # Save the comment to the database
             query = Comment(user=request.user, law=law, text=text)
             query.save()
-            # Get the date that was generated when comment was created
-            # This should be really easy, just don't have connection now
-            # TODO: In fact here I have to return date and comment-id for editing purposes
 
-            # Again success!
-            output = json.dumps({"date": query.time.strftime("%d/%m/%Y %H.%M"),"id": query.id})
-            print output
+            # Save a dictionary of data into output
+            # Here we have date, id of the comment and username
+            output = json.dumps({"date": query.time.strftime("%d/%m/%Y %H.%M"),
+                                 "id": query.id,
+                                 "username": request.user.username})
         except:
             pass
 

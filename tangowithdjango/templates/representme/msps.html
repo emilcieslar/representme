@@ -30,7 +30,7 @@
 
                     {% for msp in msps %}
 
-                        <tr data-href="">
+                        <tr data-href="{{ msp.firstname|lower }}-{{ msp.lastname|lower }}">
                             <td><img width="50%" src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg""/>
                             </td>
                             <td>{{ msp.firstname }} {{ msp.lastname }}</td>
