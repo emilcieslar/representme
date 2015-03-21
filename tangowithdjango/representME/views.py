@@ -174,20 +174,24 @@ def search(request):
 
     if request.method == 'POST':
 
-        query_string = request.POST.get('q')
+        query_string = request.POST.get('search')
 
         #split query terms on ' '
         query_terms = query_string.split()
 
-        #create and empy list to store search results
-        search_results = list()
+        #create an empty list to store search results for laws
+        search_results_laws = list()
+
+        #create an empty list to store search results for MSPs
+        search_results_MSPs = list()
 
         #retrieve results for each query term
         for term in query_terms:
 
-            search_results.extend(list(chain(Law.objects.filter(topic__contains=term),chain(Law.objects.filter(text__contains=term)))))
+            search_results_laws.extend(list(chain(Law.objects.filter(topic__contains=term),Law.objects.filter(text__contains=term))))
+            search_results_MSPs.extend(list(chain(MSP.objects.filter(firstname__contains=term),MSP.objects.filter(lastname__contains=term))))
 
-        context_dict = {'search_results': search_results, 'query_string': query_string}
+        context_dict = {'search_results_laws': search_results_laws, 'search_results_MSPs': search_results_MSPs,'query_string': query_string}
 
         return render(request, 'representme/search.html', context_dict)
 

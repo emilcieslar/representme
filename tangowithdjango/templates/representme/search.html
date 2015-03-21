@@ -8,7 +8,7 @@
             <form method="post" action="{% url 'search' %}">
                 {% csrf_token %}
                 <!-- Display the search form elements here -->
-                <input type="text" name="q" id="id_q"/>
+                <input type="text" name="search" id="id_q"/>
                 <input type="submit" value="Submit"/>
                 <br />
             </form>
@@ -16,8 +16,12 @@
             <div class="panel">
                <p>You searched for "{{ query_string }}" and the results are listed below.</p>
 
-                {% for result in search_results %}
+                {% for result in search_results_laws %}
                 <li> {{ result.text }}</li>
+                {%  endfor %}
+
+                {% for result in search_results_MSPs %}
+                <li> {{ result.firstname }} {{ result.lastname }}</li>
                 {%  endfor %}
 
                 Cheers and enjoy!
