@@ -386,7 +386,7 @@ def register(request):
             login(request, new_user)
 
             # Go to the login page
-            return HttpResponseRedirect('/representME/')
+            return HttpResponseRedirect(reverse('index'))
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
@@ -398,7 +398,7 @@ def register(request):
     # Not a HTTP POST, so we render our form using two ModelForm instances.
     # These forms will be blank, ready for user input.
     else:
-        return HttpResponseRedirect('/representME/')
+        return HttpResponseRedirect(reverse('index'))
 
     # Render the template depending on the context.
     return render(request,
