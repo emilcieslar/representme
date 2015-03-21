@@ -514,7 +514,7 @@ def user_vote(request):
         # Otherwise create a new vote
         else:
             try:
-                query = UserVote(user=request.user, law=law, voted=True, vote_for=vote)
+                query = UserVote(user=request.user, law=law, vote=vote)
                 query.save()
                 # Again success!
                 success = True
