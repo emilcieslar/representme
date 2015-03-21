@@ -17,6 +17,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 #from representME.search import generic_search
+from itertools import chain
 
 # Create your views here.
 def computeMatch(user, msp):
@@ -155,18 +156,26 @@ def law(request, law_name):
 
     return render(request, 'representme/law.html', context_dict)
 
+"""
+Returns the relevant law objects based on the user's search query provided in input "search"
+"""
 def search(request):
     context_dict = {}
 
     if request.method == 'POST':
-        # Gather the username and password provided by the user.
-        # This information is obtained from the login form.
-        # We use request.POST.get('<variable>') as opposed to request.POST['<variable>'],
-        # because the request.POST.get('<variable>') returns None, if the value does not exist,
-        # while the request.POST['<variable>'] will raise key error exception
+
         query_string = request.POST.get('q')
 
-        search_results = Law.objects.filter(topic__contains=query_string)
+        #split query terms on ' '
+        query_terms = query_string.split()
+
+        #create and empy list to store search results
+        search_results = list()
+
+        #retrieve results for each query term
+        for term in query_terms:
+
+            search_results.extend(list(chain(Law.objects.filter(topic__contains=term),chain(Law.objects.filter(text__contains=term)))))
 
         context_dict = {'search_results': search_results, 'query_string': query_string}
 
