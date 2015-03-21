@@ -2,51 +2,43 @@
 {% load static %}
 
 
+{% block breadcrumbs_block %}
+
+    <li>Laws</li>
+
+{% endblock %}
+
 
 {% block body_block %}
 
-    <div class="row main-content">
+    <table class="laws-table">
+        {% if laws %}
 
-        <div class="breadcrumbs-wrapper">
-            <li><a href="{% url 'index' %}">Home</a></li>
-            <li>Laws</li>
-        </div><!-- .breadcrumbs-wrapper -->
+            <tr>
+                <th>Name of the law</th>
+                <th class="hide-for-small">Topic</th>
+                <th>Date</th>
+                <th class="hide-for-small">Result</th>
+            </tr>
 
-        <div class="index-search-wrapper search">
-            <input type="text" name="search" placeholder="Search for Laws, MSPs, ..." />
-            <input type="submit" name="submit-search" value="" />
-        </div><!-- .search -->
+            {% for law in laws %}
 
-        <table class="laws-table">
-            {% if laws %}
-
-                <tr>
-                    <th>Name of the law</th>
-                    <th class="hide-for-small">Topic</th>
-                    <th>Date</th>
-                    <th class="hide-for-small">Result</th>
+                <tr data-href="{% url 'law' law.name %}">
+                    <td>{{ law.name }}</td>
+                    <td class="hide-for-small">{{ law.topic }}</td>
+                    <td>{{ law.date }}</td>
+                    <td class="hide-for-small">
+                        {% if law.result == '1' %}
+                            Carried
+                        {% else %}
+                            Defeated
+                        {% endif %}
+                    </td>
                 </tr>
 
-                {% for law in laws %}
+            {% endfor %}
 
-                    <tr data-href="{% url 'law' law.name %}">
-                        <td>{{ law.name }}</td>
-                        <td class="hide-for-small">{{ law.topic }}</td>
-                        <td>{{ law.date }}</td>
-                        <td class="hide-for-small">
-                            {% if law.result == '1' %}
-                                Carried
-                            {% else %}
-                                Defeated
-                            {% endif %}
-                        </td>
-                    </tr>
-
-                {% endfor %}
-
-            {% endif %}
-        </table>
-
-    </div><!-- row containing main content with white transparent background -->
+        {% endif %}
+    </table>
 
 {% endblock %}

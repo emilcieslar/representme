@@ -1,93 +1,84 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
+{% block breadcrumbs_block %}
+
+    <li><a href="{% url 'search' %}">Search</a></li>
+    <li>{{ query_string }}</li>
+
+{% endblock %}
+
+
 {% block body_block %}
 
-    <div class="row main-content">
+    {% for law in search_results_laws %}
 
-        <div class="breadcrumbs-wrapper">
-            <li><a href="{% url 'index' %}">Home</a></li>
-            <li><a href="{% url 'laws' %}">Laws</a></li>
-            <li>{{ law.name }}</li>
-        </div><!-- .breadcrumbs-wrapper -->
+    <div class="content-inner">
 
-        <div class="index-search-wrapper search">
-            <form method="post" action="{% url 'search' %}">
-                {% csrf_token %}
-                <input type="text" name="search" value="{{ query_string }}" placeholder="Search for Laws, MSPs, ..." />
-                <input type="submit" name="Submit" value="" />
-            </form>
-        </div><!-- .search -->
+        <div class="content-inner-header">
+            <h2>{{ law.name }}</h2>
+            <div class="tag">{{ law.topic }}</div>
+            <div class="tag upcoming">{{ upcoming }}</div>
+        </div><!-- .content-inner-header -->
 
-        {% for law in search_results_laws %}
+        <div class="content-inner-content">
+            <div class="row">
+                <div class="large-6 medium-6 small-12 columns">
+                    <p>{{ law.text }}</p>
+                </div><!-- column holding a description of a law -->
 
-        <div class="content-inner">
+                <div class="large-5 medium-5 small-12 columns">
+                    <div class="row vote-table">
+                        <div class="large-4 medium-4 small-12 columns">
+                            <div class="col">
+                                {% if user.is_authenticated %}
+                                    <h4>Your vote</h4>
+                                    <div class="your-vote{% if user_vote.voted %}{% if user_vote.vote_for %} yes{% else %} no{% endif %}{% endif %}"></div>
+                                {% else %}
+                                    <h4>Log in to vote</h4>
+                                    <div class="your-vote"></div>
+                                {% endif %}
+                            </div><!-- col -->
+                        </div>
+                        <div class="large-4 medium-4 small-12 columns">
+                            <div class="col">
+                                <h4>Date</h4>
+                                <div>{{ law.date }}</div>
+                            </div><!-- col -->
+                        </div>
+                        <div class="large-4 medium-4 small-12 columns">
+                            <div class="col">
+                                <h4>Result</h4>
 
-            <div class="content-inner-header">
-                <h2>{{ law.name }}</h2>
-                <div class="tag">{{ law.topic }}</div>
-                <div class="tag upcoming">{{ upcoming }}</div>
-            </div><!-- .content-inner-header -->
-
-            <div class="content-inner-content">
-                <div class="row">
-                    <div class="large-6 medium-6 small-12 columns">
-                        <p>{{ law.text }}</p>
-                    </div><!-- column holding a description of a law -->
-
-                    <div class="large-5 medium-5 small-12 columns">
-                        <div class="row vote-table">
-                            <div class="large-4 medium-4 small-12 columns">
-                                <div class="col">
-                                    {% if user.is_authenticated %}
-                                        <h4>Your vote</h4>
-                                        <div class="your-vote{% if user_vote.voted %}{% if user_vote.vote_for %} yes{% else %} no{% endif %}{% endif %}"></div>
+                                <div>
+                                    {% if law.result == '1' %}
+                                        Carried
                                     {% else %}
-                                        <h4>Log in to vote</h4>
-                                        <div class="your-vote"></div>
+                                        Defeated
                                     {% endif %}
-                                </div><!-- col -->
-                            </div>
-                            <div class="large-4 medium-4 small-12 columns">
-                                <div class="col">
-                                    <h4>Date</h4>
-                                    <div>{{ law.date }}</div>
-                                </div><!-- col -->
-                            </div>
-                            <div class="large-4 medium-4 small-12 columns">
-                                <div class="col">
-                                    <h4>Result</h4>
+                                </div>
+                            </div><!-- col -->
+                        </div>
+                    </div><!-- row holding a table -->
+                </div><!-- column holding a table -->
+            </div><!-- row holding a description and a table -->
+        </div>
 
-                                    <div>
-                                        {% if law.result == '1' %}
-                                            Carried
-                                        {% else %}
-                                            Defeated
-                                        {% endif %}
-                                    </div>
-                                </div><!-- col -->
-                            </div>
-                        </div><!-- row holding a table -->
-                    </div><!-- column holding a table -->
-                </div><!-- row holding a description and a table -->
-            </div>
+    </div><!-- content-inner -->
 
-        </div><!-- content-inner -->
+    {%  endfor %}
 
+    <div class="panel">
+
+        {% for result in search_results_laws %}
+        <li> {{ result.text }}</li>
         {%  endfor %}
 
-            <div class="panel">
+        {% for result in search_results_MSPs %}
+        <li> {{ result.firstname }} {{ result.lastname }}</li>
+        {%  endfor %}
 
-                {% for result in search_results_laws %}
-                <li> {{ result.text }}</li>
-                {%  endfor %}
-
-                {% for result in search_results_MSPs %}
-                <li> {{ result.firstname }} {{ result.lastname }}</li>
-                {%  endfor %}
-
-            </div>
-
-
+    </div>
 
 {% endblock %}

@@ -2,75 +2,67 @@
 {% load static %}
 
 
+{% block breadcrumbs_block %}
+    <li><a href="{% url 'msps' %}">MSPs</a></li>
+    <li>{{ first_name }} {{ last_name }}</li>
+{% endblock %}
+
 
 {% block body_block %}
 
-    <div class="row main-content">
+    <div class="content-inner">
 
-        <div class="breadcrumbs-wrapper">
-            <li><a href="{% url 'index' %}">Home</a></li>
-            <li><a href="{% url 'msps' %}">MSPs</a></li>
-            <li>{{ msp.firstname }} {{ msp.lastname }}</li>
-        </div><!-- .breadcrumbs-wrapper -->
+        <div class="content-inner-header">
 
-        <div class="index-search-wrapper search">
-            <input type="text" name="search" placeholder="Search for Laws, MSPs, ..." />
-            <input type="submit" name="submit-search" value="" />
-        </div><!-- .search -->
+            <h2>{{ msp.firstname }} {{ msp.lastname }}</h2>
+            {% if is_my_msp %}<div class="tag">My MSP</div>{% endif %}
 
-        <div class="content-inner">
+        </div><!-- .content-inner-header -->
 
-            <div class="content-inner-header">
+        <div class="content-inner-content">
 
-                <h2>{{ map.firstname }} {{ msp.lastname }}</h2>
-                {% if is_my_msp %}<div class="tag">My MSP</div>{% endif %}
+            <div class="row">
+                <div class="large-3 medium-3 small-12 columns">
+                    <img src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg">
+                </div><!-- column holding a description of a law -->
 
-            </div><!-- .content-inner-header -->
+                <div class="large-8 medium-8 small-12 columns">
+                    <div class="row vote-table">
+                        <div class="large-3 medium-3 small-12 columns">
+                            <div class="col">
+                                <h4>Represents</h4>
+                                <div>{{ msp.constituency }}</div>
+                            </div><!-- col -->
+                        </div>
+                        <div class="large-3 medium-3 small-12 columns">
+                            <div class="col">
+                                <h4>Member of</h4>
+                                <div>{{ msp.party }}</div>
+                            </div><!-- col -->
+                        </div>
+                        <div class="large-3 medium-3 small-12 columns">
+                            <div class="col">
+                                <h4>Position held</h4>
+                                <div>None</div>
+                            </div><!-- col -->
+                        </div>
+                        <div class="large-3 medium-3 small-12 columns">
+                            <div class="col">
+                                <h4>Present</h4>
+                                <div>{{ msp.presence }}</div>
+                            </div><!-- col -->
+                        </div>
+                    </div><!-- row holding a table -->
+                </div><!-- column holding a table -->
+            </div><!-- row holding a description and a table -->
 
-            <div class="content-inner-content">
+        </div><!-- .content-inner-content -->
+    </div><!-- .content-inner -->
 
-                <div class="row">
-                    <div class="large-3 medium-3 small-12 columns">
-                        <img src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg">
-                    </div><!-- column holding a description of a law -->
+{% endblock %}
 
-                    <div class="large-8 medium-8 small-12 columns">
-                        <div class="row vote-table">
-                            <div class="large-3 medium-3 small-12 columns">
-                                <div class="col">
-                                    <h4>Represents</h4>
 
-                                    <div>{{ msp.constituency }}</div>
-                                </div><!-- col -->
-                            </div>
-                            <div class="large-3 medium-3 small-12 columns">
-                                <div class="col">
-                                    <h4>Member of</h4>
-
-                                    <div>{{ msp.party }}</div>
-                                </div><!-- col -->
-                            </div>
-                            <div class="large-3 medium-3 small-12 columns">
-                                <div class="col">
-                                    <h4>Position held</h4>
-                                    <div>None</div>
-                                </div><!-- col -->
-                            </div>
-                            <div class="large-3 medium-3 small-12 columns">
-                                <div class="col">
-                                    <h4>Present</h4>
-
-                                    <div>{{ msp.presence }}</div>
-                                </div><!-- col -->
-                            </div>
-                        </div><!-- row holding a table -->
-                    </div><!-- column holding a table -->
-                </div><!-- row holding a description and a table -->
-
-            </div><!-- .content-inner-content -->
-        </div><!-- .content-inner -->
-
-    </div><!-- row containing main content with white transparent background -->
+{% block body_below_block %}
 
     <div class="row">
         <div class="large-12 small-12 columns comments">
