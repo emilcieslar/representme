@@ -422,6 +422,8 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                 }
 
                 .latest-law h3 span.edit-comment {
+                    background: #2c3e50;
+                    color: white;
                     cursor: pointer;
                     -webkit-user-select: none;
                     -moz-user-select: none;
