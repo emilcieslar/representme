@@ -429,6 +429,19 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                     user-select: none;
                 }
 
+                .latest-law h3 span.msp-vote.for {
+                    background: #3ab54a;
+                }
+
+                .latest-law h3 span.msp-vote.against {
+                    background: #e74c3c;
+                }
+
+                .latest-law h3 span.msp-vote.nothing {
+                    background: rgb(218,218,218);
+                    color: #3498db;
+                }
+
             .latest-law p {
                 color: #2980b9;
                 font-size: 14px;

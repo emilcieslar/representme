@@ -123,7 +123,8 @@ $(document).ready(function() {
                     }
 
                     // Add the comment to the wrapper
-                    $('#comments-wrapper').prepend('<div data-userid="" class="latest-law" style="display: none"><h3>Emil Cieslar &nbsp;&nbsp;<span>' + data['date'] + '</span> &nbsp;&nbsp;<span class="edit-comment" data-commentid="' + data['id'] + '">Edit</span></h3><p>' + text + '</p></div><!-- .latest-law -->');
+                    // TODO: Return a user name in the json query as well
+                    $('#comments-wrapper').prepend('<div data-userid="" class="latest-law" style="display: none"><h3>' + data['username'] + ' &nbsp;&nbsp;<span>' + data['date'] + '</span> &nbsp;&nbsp;<span class="edit-comment" data-commentid="' + data['id'] + '">Edit</span></h3><p>' + text + '</p></div><!-- .latest-law -->');
                     // After the HTML is added, display it nicely
                     $('#comments-wrapper .latest-law').fadeIn('slow');
 
