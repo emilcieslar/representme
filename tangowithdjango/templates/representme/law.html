@@ -27,7 +27,7 @@
 
                 <div class="right-side" data-lawid="{{ law.id }}">
                     {% if user.is_authenticated %}
-                        {% if user_vote.voted %}
+                        {% if user_vote|lower == 'none' %}
                             <div class="against number">{{ votes_against }}</div>
                             <div class="approve number">{{ votes_for }}</div>
                         {% else %}
@@ -54,7 +54,7 @@
                                 <div class="col">
                                     {% if user.is_authenticated %}
                                         <h4>Your vote</h4>
-                                        <div class="your-vote{% if user_vote.voted %}{% if user_vote.vote_for %} yes{% else %} no{% endif %}{% endif %}"></div>
+                                        <div class="your-vote{% if user_vote|lower == 'true' %} yes{% elif user_vote|lower == 'false' %}  no {% endif %}"></div>
                                     {% else %}
                                         <h4>Log in to vote</h4>
                                         <div class="your-vote"></div>

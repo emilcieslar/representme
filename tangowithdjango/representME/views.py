@@ -112,11 +112,11 @@ def law(request, law_name):
 
         law = Law.objects.get(name=law_name)
         comments = Comment.objects.order_by('-time').filter(law=law)
-        votes = UserVote.objects.filter(law=law, voted=True)
+        votes = UserVote.objects.filter(law=law)
         # this is how you get the date today:
         today = date.today()
-        context_dict['votes_for'] = votes.filter(vote_for=True).count()
-        context_dict['votes_against'] = votes.filter(vote_for=False).count()
+        context_dict['votes_for'] = votes.filter(vote=True).count()
+        context_dict['votes_against'] = votes.filter(vote=False).count()
         context_dict['law'] = law
         context_dict['upcoming'] = "Past" if law.date < today else "Upcoming"
         # this should be taken care of in the template, the information is already in the law, just send the law
@@ -160,7 +160,7 @@ def law(request, law_name):
         try:
             context_dict['user_vote'] = UserVote.objects.get(user=this_user, law=law)
         except UserVote.DoesNotExist:
-            context_dict['user_vote'] = ''
+            pass
     except Law.DoesNotExist:
         pass
 

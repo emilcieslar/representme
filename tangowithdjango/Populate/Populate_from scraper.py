@@ -21,11 +21,13 @@ from dateutil import parser
 
 
 def delete_data():
+    Topic.objects.all().delete()
     Law.objects.all().delete()
     Topic.objects.all().delete()
     Party.objects.all().delete()
     Constituency.objects.all().delete()
     MSP.objects.all().delete()
+    Position.objects.all().delete()
     MSPVote.objects.all().delete()
 
 
@@ -188,9 +190,24 @@ def populate_current_msps():
             c = Constituency.objects.get(name=row[3].strip())
             firstname = row[1].strip()
             lastname = row[0]
-            img_path = 'img/images/MSPs/' + firstname + lastname + '.jpg'
-            m = MSP(firstname=firstname, lastname=lastname, constituency=c, party=p, img=img_path, foreignid=i)
+            m = MSP(firstname=firstname, lastname=lastname, constituency=c, party=p, foreignid=i)
             m.save()
+
+
+def populate_positions():
+    """
+    Takes static data from data.py (unfortunately, nowhere to find this data up-to-date consistently)
+    :return: Populate Positions table
+    """
+    i = 0
+    for pos in positions:
+        try:
+            p = Position(position_foreignid=i, name=pos[2], msp=MSP.objects.get(firstname=pos[0], lastname=pos[1]),
+                         startdate=pos[3], enddate=pos[4])
+            p.save()
+            i += 1
+        except MSP.DoesNotExist:
+            pass
 
 
 def main():
@@ -203,9 +220,11 @@ def main():
     populate_current_msps()
     print "Party table done"
     print "MSP table done"
+    populate_positions()
+    print "MSP positions done"
     populate_law(divisions_location, startdate, enddate)
     print "Law table done"
-    print "MSP vote done"
+    print "MSP vote done"    
     print "done"
 
 

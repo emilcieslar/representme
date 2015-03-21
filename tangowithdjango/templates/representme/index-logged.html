@@ -59,7 +59,7 @@
 
                             <div class="latest-law">
                             <a href="{% url "law" law.name %}">
-                                <h3>{{ law.name }} &nbsp;&nbsp;<span> {{ law.topic }}</span></h3>
+                                <h3>{{ law.name }} &nbsp;&nbsp;<span> {{ law.topic.name }}</span></h3>
                                 <p>{{ law_excerpt }}...</p>
                             </a>
                             </div><!-- .latest-law -->
