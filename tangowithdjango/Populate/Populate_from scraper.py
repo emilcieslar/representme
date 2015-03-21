@@ -1,3 +1,4 @@
+from decimal import Decimal
 import importlib
 from xml.dom import minidom
 from django.contrib.staticfiles.utils import get_files
@@ -210,6 +211,23 @@ def populate_positions():
             pass
 
 
+def populate_presence():
+    """
+    For all msps computes presence
+    :return: populate presence field in MSP table
+    """
+
+    laws = Law.objects.all()
+    msps = MSP.objects.all()
+
+    # presence for each msp, computed over all laws
+    # not fair for msps that have joined the parliament session later
+    # but, oh well...
+    for msp in msps:
+        presentLaws = (MSPVote.objects.filter(msp=msp).exclude(vote=MSPVote.ABSENT)).count()
+        msp.presence = presentLaws * 100 / Decimal(len(laws))
+        msp.save()
+
 def main():
     delete_data()
     print "All tables empty, will now start populating"
@@ -224,7 +242,9 @@ def main():
     print "MSP positions done"
     populate_law(divisions_location, startdate, enddate)
     print "Law table done"
-    print "MSP vote done"    
+    print "MSP vote done"
+    populate_presence()
+    print "MSP presence done"
     print "done"
 
 
