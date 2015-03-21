@@ -16,10 +16,13 @@
     <link rel="stylesheet" href="{% static "css/style640.css" %}" type="text/css" media="screen" />
 </head>
 
-<!-- default is class base-bg, in index we remove that -->
-<body {% block body_bg %} class="base-bg"{% endblock %}>
-    <!-- In case it is index, there need to be one more div -->
-    {% block bg_index %}{% endblock %}
+<!-- default is class base-bg, in index (without user being logged in) we remove that -->
+<!-- the idea here is to apply this style every time, except the index when user is not logged in -->
+<body {% if user.is_authenticated %}class="base-bg"{% endif %}>
+
+    <!-- In case it is index (and user is not logged in), there need to be one more div -->
+    <!-- otherwise as default it is empty -->
+    {% if not user.is_authenticated %}<div class="index-bg"></div>{% endif %}
 
     <div class="row">
 
@@ -58,9 +61,43 @@
 
     </div><!-- row containing header -->
 
+    <!-- We want to display this only if user is logged in -->
+    {% if user.is_authenticated %}
 
-    {%  block body_block %}{%  endblock %}
+    <div class="row main-content">
 
+        <div class="breadcrumbs-wrapper">
+            <li><a href="{% url 'index' %}">Home</a></li>
+            {% block breadcrumbs_block %}
+            {% endblock %}
+        </div><!-- .breadcrumbs-wrapper -->
+
+        <div class="index-search-wrapper search">
+            <form method="post" action="{% url 'search' %}">
+                {% csrf_token %}
+                <input type="text" name="search" value="{% if query_string %}{{ query_string }}{% endif %}" placeholder="Search for Laws, MSPs, ..." />
+                <input type="submit" name="Submit" value="" />
+            </form>
+        </div><!-- .search -->
+
+    {% endif %}
+
+        <!-- #########################################################################    HERE WE PUT OUR CONTENT -->
+
+        {%  block body_block %}{% endblock %}
+
+        <!-- #########################################################################    HERE WE PUT OUR CONTENT -->
+
+    <!-- We want to display this only if user is logged in -->
+    {% if user.is_authenticated %}
+    </div><!-- row containing main content with white transparent background -->
+
+        <!-- #########################################################################    HERE WE PUT OUR CONTENT THAT IS BELOW MAIN CONTENT -->
+
+        {%  block body_below_block %}{% endblock %}
+
+        <!-- #########################################################################    HERE WE PUT OUR CONTENT THAT IS BELOW MAIN CONTENT -->
+    {% endif %}
 
     <div class="footer">
         Copyright 2015 Boyd Orcs

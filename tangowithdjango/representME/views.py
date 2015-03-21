@@ -144,8 +144,6 @@ def msp(request, msp_name):
         except MSPVote.DoesNotExist:
             pass
 
-        print laws_dict
-
         context_dict['msp_laws'] = laws_dict
 
     except MSP.DoesNotExist:
