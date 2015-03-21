@@ -134,19 +134,18 @@ def msp(request, msp_name):
             else:
                 context_dict['is_my_msp'] = False
 
-        #get laws msp has voted on as dictionary
-        laws = {}
-
+        # get laws msp has voted on + excerpts
+        laws = []
         #try to get msp votes
         try:
             MSP_votes = MSPVote.objects.filter(msp=msp).exclude(vote=MSPVote.ABSENT)
             for vote in MSP_votes:
-                law_excerpt = MSP_votes.law.text[:200]
-                laws.append([MSP.law, law_excerpt])
+                law_excerpt = vote.law.text[:200]
+                laws.append([vote.law, law_excerpt])
         except MSPVote.DoesNotExist:
             pass
-
         context_dict['msp_laws'] = laws
+
 
 
     except MSP.DoesNotExist:

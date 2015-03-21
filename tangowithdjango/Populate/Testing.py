@@ -1,14 +1,14 @@
 __author__ = 'Cristina'
 
 # What tests to run?
-tests = ['test1()', 'test2()', 'test3()', 'test4()', 'test5()', 'test6()']
+tests = ['test1()', 'test2()', 'test3()', 'test4()', 'test5()', 'test6()', 'test7()']
 
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tangowithdjango.settings")
 import django
 django.setup()
-from representME.models import Law, Topic, Party, Constituency, MSP, MSPVote, User, UserVote, Comment
-from data import number_of_msps, topics
+from representME.models import Law, Topic, Party, Constituency, MSP, MSPVote, User, UserVote, Comment, Position
+from data import number_of_msps, topics, positions
 
 '''
 Check if the numbers of MSPs match (Db vs data.py)
@@ -74,6 +74,11 @@ def test6():
         return True
     return False
 
+
+def test7():
+    if Position.objects.all().count() > 0:
+        return True
+    return False
 
 '''
 calls all the functions definitions in the tests list
