@@ -141,7 +141,7 @@ def msp(request, msp_name):
             MSP_votes = MSPVote.objects.filter(msp=msp).exclude(vote=MSPVote.ABSENT)
             for vote in MSP_votes:
                 law_excerpt = vote.law.text[:200]
-                laws.append([vote.law, law_excerpt])
+                laws.append([vote, law_excerpt])
         except MSPVote.DoesNotExist:
             pass
         context_dict['msp_laws'] = laws

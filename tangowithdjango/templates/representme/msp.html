@@ -74,17 +74,19 @@
             </div>
             <div class="latest-laws-wrapper-inner" id="comments-wrapper">
                 {% if msp_laws %}
-                    {% for vote in msp_laws %}
+                    {% for vote, excerpt in msp_laws %}
 
                         <div class="latest-law msp-page">
                             <a href="{% url 'law' vote.law.name %}">
                                 <h3>{{ vote.law.name }} &nbsp;&nbsp;<span>{{ vote.law.topic }}</span>&nbsp;&nbsp;
                                     {% if vote.vote == "1" %}<span class="msp-vote for">For</span>
                                     {% elif vote.vote == "2" %}<span class="msp-vote against">Against</span>
+                                    {% elif vote.vote == "3" %}<span class="msp-vote abstain">Abstain</span>
                                     {% else %}<span class="msp-vote nothing">No vote</span>
                                     {% endif %}
                                 </h3>
-                                <p>{{ vote.law.text }}</p>
+
+                                <p>{{ excerpt }}...</p>
                             </a>
                         </div><!-- .latest-law -->
 
