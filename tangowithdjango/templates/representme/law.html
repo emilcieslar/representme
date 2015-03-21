@@ -135,7 +135,8 @@
 
                         <div class="latest-law" data-userid="{{ comment.user }}">
                             <h3>{{ comment.user }} &nbsp;&nbsp;<span>{{ comment.time|date:"d/m/Y - H.i" }}</span>{% if comment.user == user %} &nbsp;&nbsp;<span class="edit-comment" data-commentid="{{ comment.id }}">Edit</span>{% endif %}</h3>
-                            <p>{{ comment.text }}</p>
+
+                            <p>{{ comment.text|linebreaks }}</p>
                         </div><!-- .latest-law -->
 
                     {% endfor %}
