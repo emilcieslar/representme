@@ -166,21 +166,16 @@ def msp(request, msp_name):
         #get user's MSPs and store in user_msps
         # you need request.user to access the django user stuff
         if request.user.is_authenticated():
-
             this_user = UserProfile.objects.get(user=request.user)
-
             user_msps = get_msps(this_user.postcode)
 
-        else:
-            user_msps = []
-
         #whether it is the user's msp or not
-        for user_msp in user_msps:
-            if user_msp == msp:
-                context_dict['is_my_msp'] = True
-                break
-            else:
-                context_dict['is_my_msp'] = False
+        # default:
+        context_dict['is_my_msp'] = False
+        context_dict['match'] = 0
+        if msp in user_msps:
+            context_dict['is_my_msp'] = True
+            context_dict['match'] = computeMatch(this_user, msp)
 
         # get laws msp has voted on + excerpts
         laws = []
