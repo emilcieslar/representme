@@ -306,10 +306,13 @@ def search(request):
             for topic in topics.filter(name__icontains=term):
                 search_results_topics[topic] = [[law, law.text[:200], get_time_tag(law)] for law in
                                                 laws.filter(topic=topic)]
-            search_results_laws.extend(
-                [[law, law.text[:200], get_time_tag(law)] for law in laws.filter(text__icontains=term)])
-            search_results_MSPs.extend(
-                list(chain(msps.filter(firstname__icontains=term), msps.filter(lastname__icontains=term))))
+            for law in laws.filter(text__icontains=term):
+                entry = [law, law.text[:200], get_time_tag(law)]
+                if not entry in search_results_laws:
+                    search_results_laws.append(entry)
+            for msp in chain(msps.filter(firstname__icontains=term), msps.filter(lastname__icontains=term)):
+                if not msp in search_results_MSPs:
+                    search_results_MSPs.append(msp)
 
         context_dict = {'search_results_topics': search_results_topics, 'search_results_laws': search_results_laws,
                         'search_results_MSPs': search_results_MSPs, 'query_string': query_string}
