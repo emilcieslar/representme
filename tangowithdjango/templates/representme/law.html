@@ -84,11 +84,13 @@
                         {% for msp, msp_vote in user_msps %}
 
                             <div class="large-3 medium-3 small-6 columns">
-                                <div class="msp-wrap">
-                                    <div class="vote {% if msp_vote.vote == '1' %}yes{% elif msp_vote.vote == '2' %}no{% endif %}"></div>
-                                    <h6>{{ msp.firstname }} {{ msp.lastname }}</h6>
-                                    <img src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg" />
-                                </div>
+                                <a href="{% url 'msps' %}{{ msp.firstname|lower }}-{{ msp.lastname|lower }}/">
+                                    <div class="msp-wrap">
+                                        <div class="vote {% if msp_vote.vote == '1' %}yes{% elif msp_vote.vote == '2' %}no{% endif %}"></div>
+                                        <h6>{{ msp.firstname }} {{ msp.lastname }}</h6>
+                                        <img src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg" />
+                                    </div>
+                                </a>
                             </div><!-- one particular msp -->
 
                         {% endfor %}

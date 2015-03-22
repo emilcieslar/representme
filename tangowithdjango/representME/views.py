@@ -87,6 +87,8 @@ def get_index_page(user, logged_in):
     # Otherwise, load all because we're on the index not logged in page
     else:
         latest_comments = Comment.objects.order_by('-time')[:10]
+        # Also save a variable that will let base.html know that we are on index without logged in
+        context_dict['is_index'] = True
 
     for comment in latest_comments:
         comment_excerpt = comment.text[:200]

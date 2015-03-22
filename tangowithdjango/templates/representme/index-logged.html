@@ -18,15 +18,17 @@
                 <div class="large-12 medium-12 small-12 columns">
                     {% for msp, match in user_msps_match %}
                         <div class="large-3 medium-3 small-6 columns">
-                            <div class="msp-wrap">
-                                <h6>{{ msp.firstname }} {{ msp.lastname }}</h6>
-                                <img src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg" />
+                            <a href="{% url 'msps' %}{{ msp.firstname|lower }}-{{ msp.lastname|lower }}/">
+                                <div class="msp-wrap">
+                                    <h6>{{ msp.firstname }} {{ msp.lastname }}</h6>
+                                    <img src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg" />
 
-                                <div class="match">
-                                    <div style="width: {{ match }}%"></div>
-                                    <span>{{ match }}% match</span>
+                                    <div class="match">
+                                        <div style="width: {{ match }}%"></div>
+                                        <span>{{ match }}% match</span>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div><!-- one particular msp -->
                     {% endfor %}
                 </div>

@@ -16,13 +16,15 @@
     <link rel="stylesheet" href="{% static "css/style640.css" %}" type="text/css" media="screen" />
 </head>
 
+
+
 <!-- default is class base-bg, in index (without user being logged in) we remove that -->
 <!-- the idea here is to apply this style every time, except the index when user is not logged in -->
-<body {% if user.is_authenticated %}class="base-bg"{% endif %}>
+<body {% if not is_index %}class="base-bg"{% endif %}>
 
     <!-- In case it is index (and user is not logged in), there need to be one more div -->
     <!-- otherwise as default it is empty -->
-    {% if not user.is_authenticated %}<div class="index-bg"></div>{% endif %}
+    {% if is_index %}<div class="index-bg"></div>{% endif %}
 
     <div class="row">
 
@@ -61,8 +63,8 @@
 
     </div><!-- row containing header -->
 
-    <!-- We want to display this only if user is logged in -->
-    {% if user.is_authenticated %}
+    <!-- We want to display this only if it is not index where user is logged in -->
+    {% if not is_index %}
 
     <div class="row main-content">
 
@@ -88,8 +90,8 @@
 
         <!-- #########################################################################    HERE WE PUT OUR CONTENT -->
 
-    <!-- We want to display this only if user is logged in -->
-    {% if user.is_authenticated %}
+    <!-- We want to display this only if it is not index where user is logged in -->
+    {% if not is_index %}
     </div><!-- row containing main content with white transparent background -->
 
         <!-- #########################################################################    HERE WE PUT OUR CONTENT THAT IS BELOW MAIN CONTENT -->
