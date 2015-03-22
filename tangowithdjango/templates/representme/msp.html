@@ -23,7 +23,17 @@
 
             <div class="row">
                 <div class="large-3 medium-3 small-12 columns">
-                    <img class="msp-page-img" src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg">
+                    <div class="msp-wrap msp-page">
+                        <img class="msp-page-img" src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg">
+                        {% if is_my_msp %}
+                        <div class="match">
+                            <!-- we don't wanna change the style immediately, but afterwards using
+                                jquery to animate the match -->
+                            <div data-style="width: {{ match }}%"></div>
+                            <span>{{ match }}% match</span>
+                        </div><!-- match -->
+                        {% endif %}
+                    </div><!-- msp-wrap -->
                 </div><!-- column holding a description of a law -->
 
                 <div class="large-8 medium-8 small-12 columns">
