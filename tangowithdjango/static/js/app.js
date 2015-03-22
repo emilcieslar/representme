@@ -25,8 +25,11 @@ $(document).ready(function() {
         $('#login-shade').fadeToggle();
     })
 
-    // Set height for .msp-wrap .vote (it's absolutely positioned
-    $('.msp-wrap .vote').height($('.msp-wrap').height()-$('.msp-wrap h6').height());
+    // Set height for .msp-wrap .vote (it's absolutely positioned)
+    // Do it on window load because images might not be loaded on document ready
+    $(window).load(function() {
+        $('.msp-wrap .vote').height($('.msp-wrap').height()-$('.msp-wrap h6').height());
+    });
 
     // Make a tr in a laws list a link
     $('.laws-table tr').click(function() {

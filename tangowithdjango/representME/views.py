@@ -136,7 +136,7 @@ def index(request):
         pass
 
     # If it's the MSP who's logged in, go to the MSP page instead of user page
-    if msp_user:
+    if final_url:
         return HttpResponseRedirect(reverse('msp', args=(final_url,)))
 
     elif request.user.is_authenticated():
