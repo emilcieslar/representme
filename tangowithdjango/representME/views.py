@@ -1,29 +1,30 @@
-from datetime import datetime, date
+from datetime import date
 from decimal import Decimal
-from django.shortcuts import render,render_to_response
 import json
 import re
 
+from django.shortcuts import render
 import requests
-from representME.models import Law, Comment, UserVote, Constituency, MSP, UserProfile, MSPVote, Position, Topic
-from representME.forms import UserForm, UserProfileForm, LawCommentForm
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
-from representME.bing_search import run_query
+
+from representME.models import Law, Comment, UserVote, Constituency, MSP, UserProfile, MSPVote, Position, Topic
+from representME.forms import UserForm, UserProfileForm, LawCommentForm
+
 # For the reverse() functionality
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.template import RequestContext
-#from representME.search import generic_search
+# from representME.search import generic_search
 from itertools import chain
 
 
 def get_time_tag(law):
     today = date.today()
     return "Past" if law.date < today else "Upcoming"
+
 
 def computeMatch(user, msp):
     """
@@ -98,8 +99,6 @@ def get_index_page(user, logged_in):
         comment_excerpt = comment.text[:200]
         latest_comments_results.append([comment, comment_excerpt])
 
-
-
     context_dict['latest_laws'] = latest_laws_results
     context_dict['latest_comments'] = latest_comments_results
     context_dict['user_form'] = UserForm()
@@ -123,10 +122,9 @@ def get_index_page(user, logged_in):
 
 
 def index(request):
-
     # DEPRECATED
     #if request.user.is_authenticated():
-        #return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
+    # return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
 
     # Find out whether user is an MSP or not
     msp_user = False
@@ -144,13 +142,16 @@ def index(request):
         return HttpResponseRedirect(reverse('msp', args=(final_url,)))
 
     elif request.user.is_authenticated():
-        return render(request,'representme/index-logged.html',get_index_page(request.user, True))
+        return render(request, 'representme/index-logged.html', get_index_page(request.user, True))
 
-    return render(request,'representme/index.html', get_index_page(request.user, False))
+    return render(request, 'representme/index.html', get_index_page(request.user, False))
+
 
 '''
 MSP page
 '''
+
+
 def msp(request, msp_name):
     #assume MSP name is entered as 'firstname_surname'
     names = msp_name.split('-')
@@ -219,7 +220,8 @@ def msp(request, msp_name):
 
     print context_dict
 
-    return render(request,'representme/msp.html', context_dict)
+    return render(request, 'representme/msp.html', context_dict)
+
 
 def law(request, law_name):
     context_dict = {}
@@ -280,9 +282,12 @@ def law(request, law_name):
 
     return render(request, 'representme/law.html', context_dict)
 
+
 """
 Returns the relevant law objects based on the user's search query provided in input "search"
 """
+
+
 def search(request):
     context_dict = {}
 
@@ -326,7 +331,6 @@ def search(request):
         return render(request, 'representme/search.html', {})
 
 
-	
 #From Cristina's previous project
 def is_valid(postcode):
     """
@@ -348,6 +352,7 @@ def is_valid(postcode):
                     re.match('[%s][%s][1-9]\d\d[%s][%s]$' % (fst, sec, inward, inward), postcode) or
                     re.match('[%s][1-9][%s]\d[%s][%s]$' % (fst, thd, inward, inward), postcode) or
                     re.match('[%s][%s][1-9][%s]\d[%s][%s]$' % (fst, sec, fth, inward, inward), postcode))
+
 
 #From Cristina's previous project
 def get_constituencies(postcode):
@@ -374,6 +379,7 @@ def get_constituencies(postcode):
 
     return regions
 
+
 #From Cristina's previous project
 def get_msps(postcode):
     """
@@ -395,6 +401,7 @@ def get_msps(postcode):
                 msps.append(msp)
     return msps
 
+
 def laws(request):
     context_dict = {}
 
@@ -406,6 +413,7 @@ def laws(request):
         pass
 
     return render(request, 'representme/laws.html', context_dict)
+
 
 def msps(request):
     context_dict = {}
@@ -432,6 +440,7 @@ def userview(request, username):
 
     return render(request, 'representme/index-logged.html', context_dict)
 '''''
+
 
 def user_login(request):
     # Context dict containing errors
@@ -475,6 +484,7 @@ def user_login(request):
         # blank dictionary object...
         return render(request, '/representme/#login', {})
 
+
 # Use the login_required() decorator to ensure only those logged in can access the view.
 @login_required
 def user_logout(request):
@@ -484,8 +494,8 @@ def user_logout(request):
     # Take the user back to the homepage.
     return HttpResponseRedirect(reverse('index'))
 
-def register(request):
 
+def register(request):
     userFormErrors = False
     userProfileFormErrors = False
 
@@ -540,16 +550,18 @@ def register(request):
 
     # Render the template depending on the context.
     return render(request,
-            'representme/index.html',
-            {'user_form': user_form, 'profile_form': profile_form, 'userFormErrors': userFormErrors, 'userProfileFormErrors': userProfileFormErrors} )
+                  'representme/index.html',
+                  {'user_form': user_form, 'profile_form': profile_form, 'userFormErrors': userFormErrors,
+                   'userProfileFormErrors': userProfileFormErrors})
 
 
 '''
 User Vote CLICK
 '''
+
+
 @login_required
 def user_vote(request):
-
     law_id = None
     vote = None
 
@@ -599,9 +611,10 @@ def user_vote(request):
 '''''
 Add comment
 '''''
+
+
 @login_required
 def add_comment(request):
-
     law_id = None
     text = None
     comment_id = False
