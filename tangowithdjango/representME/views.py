@@ -190,16 +190,21 @@ def msp(request, msp_name):
             # Assume laws will continue to be named increasing in number
             # This sorts them new to old
             MSP_votes = MSPVote.objects.filter(msp=msp).exclude(vote=MSPVote.ABSENT).order_by('-law')
-            try:
-                user_votes = UserVote.objects.filter(user=this_user)
-            except UserVote.DoesNotExist:
-                user_votes = []
+            # default, in case sth fails
+            if request.user.is_authenticated():
+                try:
+                    user_votes = UserVote.objects.filter(user=this_user)
+                except UserVote.DoesNotExist:
+                    pass
             for vote in MSP_votes:
                 law_excerpt = vote.law.text[:200]
-                try:
-                    user_vote = user_votes.get(law=vote.law)
-                except UserVote.DoesNotExist:
-                    user_vote = 'None'
+                # default, in case sth fails
+                user_vote = 'None'
+                if request.user.is_authenticated():
+                    try:
+                        user_vote = user_votes.get(law=vote.law)
+                    except UserVote.DoesNotExist:
+                        pass
                 laws.append([vote, law_excerpt, user_vote])
         except MSPVote.DoesNotExist:
             pass
