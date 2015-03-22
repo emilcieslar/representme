@@ -12,62 +12,56 @@
 
 {% block body_block %}
 
-    {% for law in search_results_laws %}
+    {% for topic, laws in search_results_topics.items %}
+        <h1> {{ topic.name }}</h1>
 
-    <div class="content-inner">
+    {% for law, law_excerpt, time in search_results_laws %}
 
-        <div class="content-inner-header">
-            <h2>{{ law.name }}</h2>
-            <div class="tag">{{ law.topic }}</div>
-            <div class="tag upcoming">{{ upcoming }}</div>
-        </div><!-- .content-inner-header -->
+        <div class="content-inner">
 
-        <div class="content-inner-content">
-            <div class="row">
-                <div class="large-6 medium-6 small-12 columns">
-                    <p>{{ law.text }}</p>
-                </div><!-- column holding a description of a law -->
+            <div class="content-inner-header">
+                <h2>{{ law.name }}</h2>
+                <div class="tag">{{ law.topic }}</div>
+                <div class="tag upcoming">{{ time }}</div>
+            </div><!-- .content-inner-header -->
 
-                <div class="large-5 medium-5 small-12 columns">
-                    <div class="row vote-table">
-                        <div class="large-4 medium-4 small-12 columns">
-                            <div class="col">
-                                {% if user.is_authenticated %}
-                                    <h4>Your vote</h4>
-                                    <div class="your-vote{% if user_vote.voted %}{% if user_vote.vote_for %} yes{% else %} no{% endif %}{% endif %}"></div>
-                                {% else %}
-                                    <h4>Log in to vote</h4>
-                                    <div class="your-vote"></div>
-                                {% endif %}
-                            </div><!-- col -->
-                        </div>
-                        <div class="large-4 medium-4 small-12 columns">
-                            <div class="col">
-                                <h4>Date</h4>
-                                <div>{{ law.date }}</div>
-                            </div><!-- col -->
-                        </div>
-                        <div class="large-4 medium-4 small-12 columns">
-                            <div class="col">
-                                <h4>Result</h4>
+            <div class="content-inner-content">
+                <div class="row">
+                    <div class="large-6 medium-6 small-12 columns">
+                        <p>{{ law_excerpt }}...</p>
+                    </div><!-- column holding a description of a law -->
 
-                                <div>
-                                    {% if law.result == '1' %}
-                                        Carried
-                                    {% else %}
-                                        Defeated
-                                    {% endif %}
-                                </div>
-                            </div><!-- col -->
-                        </div>
-                    </div><!-- row holding a table -->
-                </div><!-- column holding a table -->
-            </div><!-- row holding a description and a table -->
-        </div>
+                    <div class="large-5 medium-5 small-12 columns">
+                        <div class="row vote-table">
+                            <div class="large-6 medium-6 small-12 columns">
+                                <div class="col">
+                                    <h4>Date</h4>
+                                    <div>{{ law.date }}</div>
+                                </div><!-- col -->
+                            </div>
+                            <div class="large-6 medium-6 small-12 columns">
+                                <div class="col">
+                                    <h4>Result</h4>
 
-    </div><!-- content-inner -->
+                                    <div>
+                                        {% if law.result == '1' %}
+                                            Carried
+                                        {% else %}
+                                            Defeated
+                                        {% endif %}
+                                    </div>
+                                </div><!-- col -->
+                            </div>
+                        </div><!-- row holding a table -->
+                    </div><!-- column holding a table -->
+                </div><!-- row holding a description and a table -->
+            </div>
 
-    {%  endfor %}
+        </div><!-- content-inner -->
+
+    {% endfor %}
+
+    {% endfor %}
 
     <div class="panel">
 

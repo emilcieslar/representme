@@ -668,6 +668,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
                 .vote-table .columns .col div.your-vote {
                     background: #dadada;
+                    text-indent: -10000px;
                 }
 
                 .vote-table .columns .col div.your-vote.yes {
