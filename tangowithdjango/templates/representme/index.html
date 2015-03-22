@@ -11,8 +11,11 @@
                 REPRESENT<br />
                 YOU?</h2>
             <div class="index-search-wrapper">
-                <input type="text" name="search" placeholder="Search for Laws, MSPs, ..." />
-                <input type="submit" name="submit-search" value="" />
+                <form method="post" action="{% url 'search' %}">
+                    {% csrf_token %}
+                    <input type="text" name="search" placeholder="Search for Laws, MSPs, ..." />
+                    <input type="submit" name="Submit" value="" />
+                </form>
             </div>
         </div>
 

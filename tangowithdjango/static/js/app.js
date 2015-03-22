@@ -240,4 +240,8 @@ $(document).ready(function() {
         $('.login-form').fadeOut();
     });
 
+    // Set first item in accordion as active
+    $('.accordion .accordion-navigation:first-child').addClass('active');
+    $('.accordion .accordion-navigation:first-child div.content-inner').addClass('active');
+
 });

@@ -523,6 +523,11 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         width: 96%;
     }
 
+    .content-inner.search-page {
+        width: auto;
+        float: left;
+    }
+
         .content-inner .content-inner-header {
             overflow: hidden;
             clear: both;
@@ -606,6 +611,10 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                 margin: 0;
             }
 
+            .content-inner.search-page .content-inner-header h2 {
+                padding: 0 15px;
+            }
+
             .content-inner .content-inner-header .tag {
                 float: left;
                 background: #3498db;
@@ -628,6 +637,10 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
             width: 100%;
             clear: both;
             background: white;
+        }
+
+        .content-inner-content.search-page {
+            padding: 15px;
         }
 
             .content-inner-content p {
@@ -858,3 +871,33 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         background: #3498db;
         color: white;
     }
+
+/* ############ FOUNDATION ADDITIONAL ############ */
+.accordion {
+  margin-bottom: 0;
+  margin-left: 0;}
+  .accordion:before, .accordion:after {
+    content: " ";
+    display: table; }
+  .accordion:after {
+    clear: both; }
+  .accordion .accordion-navigation, .accordion dd {
+    display: block;
+    margin-bottom: 0 !important; }
+    .accordion .accordion-navigation.active > a, .accordion dd.active > a {
+      background: #e8e8e8; }
+    .accordion .accordion-navigation > a, .accordion dd > a {
+      background: #EFEFEF;
+      color: #222222;
+      padding: 1rem;
+      display: block;
+      font-family: "Montserrat", sans-serif;
+      font-size: 16px; }
+      .accordion .accordion-navigation > a:hover, .accordion dd > a:hover {
+        background: #e3e3e3; }
+    .accordion .accordion-navigation > .content, .accordion dd > .content {
+      display: none;
+      padding: 0; }
+      .accordion .accordion-navigation > .content.active, .accordion dd > .content.active {
+        display: block;
+        background: transparent; }
