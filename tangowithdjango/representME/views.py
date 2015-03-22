@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from decimal import Decimal
 from django.shortcuts import render,render_to_response
 import json
 import re
@@ -20,9 +21,39 @@ from django.template import RequestContext
 from itertools import chain
 
 
-# Create your views here.
 def computeMatch(user, msp):
-    return 0
+    """
+    Assumptions:
+     - If the user didn't express any opinions 100%
+     - If the MSP was absent, the user Vote cannot be used for the similarity measure
+    Method:
+     - 'build' two vectors (for all the laws where the user expressed a vote and the msp was present)
+     - The similarity measure is the number of matches/ number of votes expressed by the user
+    This measure can be further improved in the future, by introducing NLP and ML techniques to predict the users opinion on other laws.
+    :param user: A User object
+    :param msp: A MSP object
+    :return: A value between 0 and 100 representing the percentage of similarity between user and MSP
+    """
+    try:
+        user_votes = UserVote.objects.filter(user=user).exclude(vote=None)
+        number_of_dimensions = len(user_votes)
+        same = 0
+        for vote in user_votes:
+            try:
+                msp_vote = MSPVote.objects.get(msp=msp, law=vote.law)
+                if msp_vote.vote == '4':
+                    number_of_dimensions += -1
+                elif vote and msp_vote.vote == '1':
+                    same += 1
+                elif not vote and msp_vote.vote == '2':
+                    same += 1
+            except MSPVote.DoesNotExist:
+                number_of_dimensions += -1
+        if number_of_dimensions > 0:
+            return 100 * same / number_of_dimensions
+    except UserVote.DoesNotExist:
+        pass
+    return 100
 
 
 # this is bulshit, someone write this
@@ -82,7 +113,6 @@ def get_index_page(user, logged_in):
         user_msps_match = {}
     context_dict['user_msps_match'] = user_msps_match
 
-    print user_msps_match
     return context_dict
 
 
