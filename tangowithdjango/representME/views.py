@@ -47,14 +47,14 @@ def computeMatch(user, msp):
                 msp_vote = MSPVote.objects.get(msp=msp, law=vote.law)
                 if msp_vote.vote == '4':
                     number_of_dimensions += -1
-                elif vote and msp_vote.vote == '1':
+                elif vote.vote and msp_vote.vote == '1':
                     same += 1
-                elif not vote and msp_vote.vote == '2':
+                elif not vote.vote and msp_vote.vote == '2':
                     same += 1
             except MSPVote.DoesNotExist:
                 number_of_dimensions += -1
         if number_of_dimensions > 0:
-            return 100 * same / number_of_dimensions
+            return 100 * same / Decimal(number_of_dimensions)
     except UserVote.DoesNotExist:
         pass
     return 100
