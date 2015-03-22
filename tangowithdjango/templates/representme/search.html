@@ -71,6 +71,10 @@
 
     <div class="panel">
 
+        {% for topic in search_results_topics %}
+            <li> {{ result.name }}</li>
+        {% endfor %}
+
         {% for result in search_results_laws %}
         <li> {{ result.text }}</li>
         {%  endfor %}

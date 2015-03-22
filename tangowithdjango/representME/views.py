@@ -5,7 +5,7 @@ import json
 import re
 
 import requests
-from representME.models import Law, Comment, UserVote, Constituency, MSP, UserProfile, MSPVote, Position
+from representME.models import Law, Comment, UserVote, Constituency, MSP, UserProfile, MSPVote, Position, Topic
 from representME.forms import UserForm, UserProfileForm, LawCommentForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
@@ -285,23 +285,26 @@ def search(request):
     context_dict = {}
 
     if request.method == 'POST':
-
         query_string = request.POST.get('search')
-
         #split query terms on ' '
         query_terms = query_string.split()
 
-        #create an empty list to store search results for laws
-        search_results_laws = list()
+        # create an empty lists to store search results
+        search_results_topics = []
+        search_results_laws = []
+        search_results_MSPs = []
 
-        #create an empty list to store search results for MSPs
-        search_results_MSPs = list()
+        # retrieve fromt he databse cfor time concerns (this will cache it)
+        topics = Topic.objects.all()
+        laws = Law.objects.all()
+        msps = MSP.objects.all()
 
         #retrieve results for each query term
         for term in query_terms:
-
-            search_results_laws.extend(list(chain(Law.objects.filter(topic__contains=term),Law.objects.filter(text__contains=term))))
-            search_results_MSPs.extend(list(chain(MSP.objects.filter(firstname__contains=term),MSP.objects.filter(lastname__contains=term))))
+            search_results_topics.extend(list(topics.filter(name__icontains=term)))
+            search_results_laws.extend(list(laws.filter(text__icontains=term)))
+            search_results_MSPs.extend(
+                list(chain(msps.filter(firstname__icontains=term), msps.filter(lastname__icontains=term))))
 
         context_dict = {'search_results_laws': search_results_laws, 'search_results_MSPs': search_results_MSPs,'query_string': query_string}
 
