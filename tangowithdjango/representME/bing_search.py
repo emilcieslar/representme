@@ -1,9 +1,12 @@
 import json
-import urllib, urllib2
+import urllib
+import urllib2
+
 
 # Add your BING_API_KEY
 
 BING_API_KEY = 'rMlICdllLIBDWVkYImJotXy55yNBZeDE4BC7Y5JaQvM'
+
 
 def run_query(search_terms):
     # Specify the base
@@ -57,9 +60,9 @@ def run_query(search_terms):
         # Loop through each page returned, populating out results list.
         for result in json_response['d']['results']:
             results.append({
-            'title': result['Title'],
-            'link': result['Url'],
-            'summary': result['Description']})
+                'title': result['Title'],
+                'link': result['Url'],
+                'summary': result['Description']})
 
     # Catch a URLError exception - something went wrong when connecting!
     except urllib2.URLError, e:

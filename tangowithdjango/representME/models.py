@@ -14,6 +14,7 @@ class Topic(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class Law(models.Model):
     CARRIED = 1
     DEFEATED = 2
@@ -32,6 +33,7 @@ class Law(models.Model):
 
     def __unicode__(self):
         return self.name
+
 
 class Party(models.Model):
     """
@@ -59,6 +61,7 @@ class Constituency(models.Model):
         if self.parent is None:
             return True
         return False
+
 
 class UserProfile(models.Model):
     # This line is required. Links UserProfile to a User model instance.
@@ -124,6 +127,7 @@ class Position(models.Model):
     def __unicode__(self):
         return u'%s: %s - %s' % (self.name, self.startdate, self.enddate)
 
+
 class MSPVote(models.Model):
     """
     represents an msp's vote for a division
@@ -145,6 +149,7 @@ class MSPVote(models.Model):
 
     def __unicode__(self):
         return self.vote
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User)

@@ -1,29 +1,35 @@
-from datetime import datetime, date
+from datetime import date
 from decimal import Decimal
-from django.shortcuts import render,render_to_response
 import json
 import re
 
+from django.shortcuts import render
 import requests
-from representME.models import Law, Comment, UserVote, Constituency, MSP, UserProfile, MSPVote, Position, Topic
-from representME.forms import UserForm, UserProfileForm, LawCommentForm
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
-from representME.bing_search import run_query
+
+from representME.models import Law, Comment, UserVote, Constituency, MSP, UserProfile, MSPVote, Position, Topic
+from representME.forms import UserForm, UserProfileForm, LawCommentForm
+
 # For the reverse() functionality
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.template import RequestContext
-#from representME.search import generic_search
+# from representME.search import generic_search
 from itertools import chain
 
 
 def get_time_tag(law):
+    """
+    Compares the data of the law to the date of today and returns a tag
+    :param law: an object from the Law table
+    :return: a string, either "Past" or "Upcoming"
+    """
     today = date.today()
     return "Past" if law.date < today else "Upcoming"
+
 
 def computeMatch(user, msp):
     """
@@ -47,21 +53,26 @@ def computeMatch(user, msp):
                 msp_vote = MSPVote.objects.get(msp=msp, law=vote.law)
                 if msp_vote.vote == '4':
                     number_of_dimensions += -1
-                elif vote and msp_vote.vote == '1':
+                elif vote.vote and msp_vote.vote == '1':
                     same += 1
-                elif not vote and msp_vote.vote == '2':
+                elif not vote.vote and msp_vote.vote == '2':
                     same += 1
             except MSPVote.DoesNotExist:
                 number_of_dimensions += -1
         if number_of_dimensions > 0:
-            return 100 * same / number_of_dimensions
+            return 100 * same / Decimal(number_of_dimensions)
     except UserVote.DoesNotExist:
         pass
     return 100
 
 
-# this is bulshit, someone write this
 def computeUserBadge(user):
+    """
+    At the moment the badge is computed based on the number of comments
+    In the future this can be extended
+    :param user: an object from the User table
+    :return: A tag to be used as a user badge
+    """
     number_of_comments = Comment.objects.filter(user=user).count()
     if number_of_comments < 5:
         return 'Noob'
@@ -72,22 +83,26 @@ def computeUserBadge(user):
 
 
 def get_index_page(user, logged_in):
+    """
+    this is used for both possible index pages (not logged in and logged in)
+    :param user: A user instance (or null)
+    :param logged_in: boolean which is True if the user is logged in
+    :return: The data for the index page
+    """
     context_dict = {}
-    # have an empty dictionary that will contain tuples
     latest_laws_results = []
-    # get latest 10 laws, here you change the number of laws needed on index page
     latest_laws = Law.objects.order_by('-date')[:10]
+
     # for each of those laws get the excerpt and add the pair to the dictionary to be returned
-    # here you can control the length of the excerpt
     for law in latest_laws:
         law_excerpt = law.text[:200]
         latest_laws_results.append([law, law_excerpt])
 
-    # same for comments
     latest_comments_results = []
     # If user is logged in, load only the user's comments
     if logged_in:
         latest_comments = Comment.objects.filter(user=user).order_by('-time')[:10]
+
     # Otherwise, load all because we're on the index not logged in page
     else:
         latest_comments = Comment.objects.order_by('-time')[:10]
@@ -98,8 +113,6 @@ def get_index_page(user, logged_in):
         comment_excerpt = comment.text[:200]
         latest_comments_results.append([comment, comment_excerpt])
 
-
-
     context_dict['latest_laws'] = latest_laws_results
     context_dict['latest_comments'] = latest_comments_results
     context_dict['user_form'] = UserForm()
@@ -107,7 +120,6 @@ def get_index_page(user, logged_in):
 
     # you need request.user to access the django user stuff
     if logged_in:
-        # you use this to get the Userprofile data associated with this user
         this_user = UserProfile.objects.get(user=user)
         user_msps = get_msps(this_user.postcode)
         user_msps_match = []
@@ -123,13 +135,9 @@ def get_index_page(user, logged_in):
 
 
 def index(request):
-
-    # DEPRECATED
-    #if request.user.is_authenticated():
-        #return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
-
-    # Find out whether user is an MSP or not
-    msp_user = False
+    """
+    :return: Sets the context for the not logged in index page
+    """
     final_url = False
     try:
         msp_user = User.objects.get(username=request.user)
@@ -144,21 +152,18 @@ def index(request):
         return HttpResponseRedirect(reverse('msp', args=(final_url,)))
 
     elif request.user.is_authenticated():
-        return render(request,'representme/index-logged.html',get_index_page(request.user, True))
+        return render(request, 'representme/index-logged.html', get_index_page(request.user, True))
 
-    return render(request,'representme/index.html', get_index_page(request.user, False))
+    return render(request, 'representme/index.html', get_index_page(request.user, False))
 
-'''
-MSP page
-'''
+
 def msp(request, msp_name):
-    #assume MSP name is entered as 'firstname_surname'
+    """
+    :param msp_name: An msp name as a String firstname-surname
+    :return: the context for the individual msp page
+    """
     names = msp_name.split('-')
-
-    print names[0] + " " + names[1]
-
     context_dict = {}
-
     try:
         #try to retrieve MSP with matching first and last name
         msp = MSP.objects.get(firstname__iexact=names[0], lastname__iexact=names[1])
@@ -166,18 +171,15 @@ def msp(request, msp_name):
         context_dict['msp'] = msp
 
         user_msps = []
-
-        #get user's MSPs and store in user_msps
-        # you need request.user to access the django user stuff
         if request.user.is_authenticated():
             this_user = UserProfile.objects.get(user=request.user)
             user_msps = get_msps(this_user.postcode)
 
-        #whether it is the user's msp or not
         # default:
         context_dict['is_my_msp'] = False
         context_dict['match'] = 0
-        if msp in user_msps:
+
+        if msp in user_msps and len(user_msps) > 0:
             context_dict['is_my_msp'] = True
             context_dict['match'] = computeMatch(this_user, msp)
 
@@ -185,7 +187,9 @@ def msp(request, msp_name):
         laws = []
         #try to get msp votes
         try:
-            MSP_votes = MSPVote.objects.filter(msp=msp).exclude(vote=MSPVote.ABSENT)
+            # Assume laws will continue to be named increasing in number
+            # This sorts them new to old
+            MSP_votes = MSPVote.objects.filter(msp=msp).exclude(vote=MSPVote.ABSENT).order_by('-law')
             try:
                 user_votes = UserVote.objects.filter(user=this_user)
             except UserVote.DoesNotExist:
@@ -206,8 +210,6 @@ def msp(request, msp_name):
             positions = Position.objects.filter(msp=msp)
         except Position.DoesNotExist:
             pass
-
-        print positions
         context_dict['msp_positions'] = positions
 
     except MSP.DoesNotExist:
@@ -217,15 +219,16 @@ def msp(request, msp_name):
     except MSP.MultipleObjectsReturned:
         pass
 
-    print context_dict
+    return render(request, 'representme/msp.html', context_dict)
 
-    return render(request,'representme/msp.html', context_dict)
 
 def law(request, law_name):
+    """
+    :param law_name: A law name
+    :return: The context for the individual law page
+    """
     context_dict = {}
-
     try:
-
         law = Law.objects.get(name=law_name)
         comments = Comment.objects.order_by('-time').filter(law=law)
         votes = UserVote.objects.filter(law=law)
@@ -233,28 +236,15 @@ def law(request, law_name):
         context_dict['votes_against'] = votes.filter(vote=False).count()
         context_dict['law'] = law
         context_dict['upcoming'] = get_time_tag(law)
-        # this should be taken care of in the template, the information is already in the law, just send the law
-        # also, you cannot compare strings in the template, bad bad practice for the future
-        # context_dict['law_result'] =  law_result(law)
         context_dict['commentForm'] = LawCommentForm()
         context_dict['comments'] = comments
         context_dict['comments_number'] = comments.count()
 
-        user_msps = {}
-
-        # you need request.user to access the django user stuff
+        user_msps = []
         if request.user.is_authenticated():
-            # you use this to get the Userprofile data associated with this user
             this_user = UserProfile.objects.get(user=request.user)
-            # -------------------------------------------------------------------------
-            # EDIT THIS WHEN CONNECTED TO INTERNET AGAIN
-            # -------------------------------------------------------------------------
-            # THIS DOES NOT WORK WITHOUT INTERNET CONNECTION
             user_msps = get_msps(this_user.postcode)
-        else:
-            this_user = -1
 
-        # have an empty dictionary that will contain tuples
         user_msps_results = []
         # for each of those user_msps get the vote for this law and add the pair to the dictionary to be returned
         for msp in user_msps:
@@ -280,12 +270,11 @@ def law(request, law_name):
 
     return render(request, 'representme/law.html', context_dict)
 
-"""
-Returns the relevant law objects based on the user's search query provided in input "search"
-"""
-def search(request):
-    context_dict = {}
 
+def search(request):
+    """
+    :return: The context for the search page
+    """
     if request.method == 'POST':
         query_string = request.POST.get('search')
         #split query terms on ' '
@@ -295,7 +284,7 @@ def search(request):
         search_results_topics = {}
         search_results_MSPs = []
 
-        # retrieve fromt he databse for time concerns (this will cache it)
+        # retrieve fromt he database for time concerns (this will cache it)
         topics = Topic.objects.all()
         laws = Law.objects.all()
         msps = MSP.objects.all()
@@ -326,7 +315,6 @@ def search(request):
         return render(request, 'representme/search.html', {})
 
 
-	
 #From Cristina's previous project
 def is_valid(postcode):
     """
@@ -348,6 +336,7 @@ def is_valid(postcode):
                     re.match('[%s][%s][1-9]\d\d[%s][%s]$' % (fst, sec, inward, inward), postcode) or
                     re.match('[%s][1-9][%s]\d[%s][%s]$' % (fst, thd, inward, inward), postcode) or
                     re.match('[%s][%s][1-9][%s]\d[%s][%s]$' % (fst, sec, fth, inward, inward), postcode))
+
 
 #From Cristina's previous project
 def get_constituencies(postcode):
@@ -374,12 +363,13 @@ def get_constituencies(postcode):
 
     return regions
 
+
 #From Cristina's previous project
 def get_msps(postcode):
     """
     search the database for msps for each constituency received from get_constituencies
     :param postcode:
-    :return:dictionary
+    :return:list of msps
     """
     regions = get_constituencies(postcode)
     if regions.has_key('ERROR'):
@@ -395,7 +385,11 @@ def get_msps(postcode):
                 msps.append(msp)
     return msps
 
+
 def laws(request):
+    """
+    :return: the context for the laws page
+    """
     context_dict = {}
 
     try:
@@ -407,35 +401,25 @@ def laws(request):
 
     return render(request, 'representme/laws.html', context_dict)
 
+
 def msps(request):
+    """
+    :return: The context for the msps page
+    """
     context_dict = {}
 
     try:
-        msps = MSP.objects.order_by('-lastname')
-        context_dict['msps'] = msps;
-
-    except:
+        msps = MSP.objects.order_by('lastname')
+        context_dict['msps'] = msps
+    except MSP.DoesNotExist:
         pass
-
     return render(request, 'representme/msps.html', context_dict)
 
 
-# DEPRECATED
-'''''
-@login_required
-def userview(request, username):
-    context_dict = get_index_page(request.user, True)
-
-    # If user tries to access another users profile, go back to his/her profile
-    if username != request.user.username:
-        return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
-
-    return render(request, 'representme/index-logged.html', context_dict)
-'''''
-
 def user_login(request):
-    # Context dict containing errors
-    context_dict = {}
+    """
+    :return:
+    """
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
         # Gather the username and password provided by the user.
@@ -475,6 +459,7 @@ def user_login(request):
         # blank dictionary object...
         return render(request, '/representme/#login', {})
 
+
 # Use the login_required() decorator to ensure only those logged in can access the view.
 @login_required
 def user_logout(request):
@@ -484,8 +469,8 @@ def user_logout(request):
     # Take the user back to the homepage.
     return HttpResponseRedirect(reverse('index'))
 
-def register(request):
 
+def register(request):
     userFormErrors = False
     userProfileFormErrors = False
 
@@ -540,16 +525,16 @@ def register(request):
 
     # Render the template depending on the context.
     return render(request,
-            'representme/index.html',
-            {'user_form': user_form, 'profile_form': profile_form, 'userFormErrors': userFormErrors, 'userProfileFormErrors': userProfileFormErrors} )
+                  'representme/index.html',
+                  {'user_form': user_form, 'profile_form': profile_form, 'userFormErrors': userFormErrors,
+                   'userProfileFormErrors': userProfileFormErrors})
 
 
-'''
-User Vote CLICK
-'''
 @login_required
 def user_vote(request):
-
+    """
+    :return: Adds user vote to the database and updates page
+    """
     law_id = None
     vote = None
 
@@ -595,13 +580,11 @@ def user_vote(request):
     # Return whether we were successful or not
     return HttpResponse(success)
 
-
-'''''
-Add comment
-'''''
 @login_required
 def add_comment(request):
-
+    """
+    :return: Adds comment to the database and updates page
+    """
     law_id = None
     text = None
     comment_id = False

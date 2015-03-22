@@ -2,6 +2,8 @@ from decimal import Decimal
 import importlib
 from xml.dom import minidom
 from django.contrib.staticfiles.utils import get_files
+from django.db import IntegrityError
+from django.middleware import transaction
 import representME
 
 __author__ = '2168879m'
@@ -76,15 +78,13 @@ def get_votes(parsing_law, law, type, result):
                 if lastname != 'Copy':
                     try:
                         msp = MSP.objects.get(firstname=firstname, lastname=lastname)
-
-                        print msp
                         v = MSPVote(msp=msp, law=law, vote=result)
                         v.save()
                     except MSP.DoesNotExist:
-                        print "this MSP is not in the parliament"
-                        print firstname + lastname + law.name
+                        pass
 
 
+@transaction.transaction.commit_manually
 def populate_law(files_location, startdate, enddate):
     """
     reads all files within an interval from a location
@@ -144,7 +144,13 @@ def populate_law(files_location, startdate, enddate):
                     # read the votes
                     get_votes(lawread, law, "for", MSPVote.YES)
                     get_votes(lawread, law, "against", MSPVote.NO)
-                    get_votes(lawread, law, "abstention", MSPVote.ABSTAIN)
+                    try:
+                        get_votes(lawread, law, "abstention", MSPVote.ABSTAIN)
+                        transaction.transaction.commit()
+                    except IntegrityError:
+                        transaction.rollback()
+                    else:
+                        transaction.transaction.commit()
                     absent_votes(law)
 
 
@@ -227,6 +233,7 @@ def populate_presence():
         presentLaws = (MSPVote.objects.filter(msp=msp).exclude(vote=MSPVote.ABSENT)).count()
         msp.presence = presentLaws * 100 / Decimal(len(laws))
         msp.save()
+
 
 def main():
     delete_data()
