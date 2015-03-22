@@ -233,6 +233,7 @@ def law(request, law_name):
     :return: The context for the individual law page
     """
     context_dict = {}
+    this_user = None
     try:
         law = Law.objects.get(name=law_name)
         comments = Comment.objects.order_by('-time').filter(law=law)
