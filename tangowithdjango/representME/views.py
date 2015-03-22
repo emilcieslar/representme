@@ -290,7 +290,7 @@ def search(request):
         query_terms = query_string.split()
 
         # create an empty lists to store search results
-        search_results_topics = []
+        search_results_topics = {}
         search_results_laws = []
         search_results_MSPs = []
 
@@ -301,12 +301,14 @@ def search(request):
 
         #retrieve results for each query term
         for term in query_terms:
-            search_results_topics.extend(list(topics.filter(name__icontains=term)))
-            search_results_laws.extend(list(laws.filter(text__icontains=term)))
+            for topic in topics.filter(name__icontains=term):
+                search_results_topics[topic] = [[law, law.text[:200]] for law in laws.filter(topic=topic)]
+            search_results_laws.extend([[law, law.text[:200]] for law in laws.filter(text__icontains=term)])
             search_results_MSPs.extend(
                 list(chain(msps.filter(firstname__icontains=term), msps.filter(lastname__icontains=term))))
 
-        context_dict = {'search_results_laws': search_results_laws, 'search_results_MSPs': search_results_MSPs,'query_string': query_string}
+        context_dict = {'search_results_topics': search_results_topics, 'search_results_laws': search_results_laws,
+                        'search_results_MSPs': search_results_MSPs, 'query_string': query_string}
 
         return render(request, 'representme/search.html', context_dict)
 
