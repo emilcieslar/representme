@@ -233,7 +233,6 @@ def law(request, law_name):
     :return: The context for the individual law page
     """
     context_dict = {}
-    this_user = None
     try:
         law = Law.objects.get(name=law_name)
         comments = Comment.objects.order_by('-time').filter(law=law)
@@ -268,7 +267,7 @@ def law(request, law_name):
 
         context_dict['user_vote'] = ''
         try:
-            context_dict['user_vote'] = UserVote.objects.get(user=this_user, law=law)
+            context_dict['user_vote'] = UserVote.objects.get(user=request.user, law=law)
         except UserVote.DoesNotExist:
             pass
     except Law.DoesNotExist:
