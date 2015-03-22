@@ -90,10 +90,13 @@
                     Voting activity
                 </div>
 
+                <div class="right">
+                    Your votes
+                </div>
             </div>
             <div class="latest-laws-wrapper-inner" id="comments-wrapper">
                 {% if msp_laws %}
-                    {% for vote, excerpt in msp_laws %}
+                    {% for vote, excerpt, user_vote in msp_laws %}
 
                         <div class="latest-law msp-page">
                             <a href="{% url 'law' vote.law.name %}">
@@ -102,7 +105,14 @@
                                     {% elif vote.vote == "2" %}<span class="msp-vote against">Against</span>
                                     {% elif vote.vote == "3" %}<span class="msp-vote abstain">Abstain</span>
                                     {% else %}<span class="msp-vote nothing">No vote</span>
+                                    {% endif %} &nbsp;&nbsp;
+                                    <div class="right">
+                                        {% if user_vote|lower == 'true' %}<span class="msp-vote for">For</span>
+                                        {% elif user_vote|lower == 'false' %}
+                                            <span class="msp-vote against">Against</span>
+                                        {% else %}<span class="msp-vote nothing">No vote</span>
                                     {% endif %}
+                                    </div>
                                 </h3>
 
                                 <p>{{ excerpt }}...</p>
