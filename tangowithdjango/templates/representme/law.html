@@ -21,7 +21,6 @@
 
             <div class="right-side" data-lawid="{{ law.id }}">
                 {% if user.is_authenticated %}
-                    vote:{{ user_vote }}
                     {% if user_vote|lower == 'true' or user_vote|lower == 'false' %}
                         <div class="against number">{{ votes_against }}</div>
                         <div class="approve number">{{ votes_for }}</div>
