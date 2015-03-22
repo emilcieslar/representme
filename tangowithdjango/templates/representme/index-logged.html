@@ -24,7 +24,9 @@
                                     <img src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg" />
 
                                     <div class="match">
-                                        <div style="width: {{ match }}%"></div>
+                                        <!-- we don't wanna change the style immediately, but afterwards using
+                                            jquery to animate the match -->
+                                        <div data-style="width: {{ match }}%"></div>
                                         <span>{{ match }}% match</span>
                                     </div>
                                 </div>

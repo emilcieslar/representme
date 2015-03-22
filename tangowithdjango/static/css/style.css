@@ -722,12 +722,16 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                 }
 
                     .msp-wrap .match div {
-                        width: 80%;
+                        width: 0;
                         height: 45px;
                         background: #abd7f4;
                         position: absolute;
                         top: 0;
                         left: 0;
+                        -webkit-transition-delay: 1s; /* Safari */
+                        transition-delay: 1s;
+                        -webkit-transition: width 2s; /* Safari */
+                        transition: width 2s;
                     }
 
                     .msp-wrap .match span {

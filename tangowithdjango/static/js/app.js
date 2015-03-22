@@ -31,6 +31,32 @@ $(document).ready(function() {
         $('.msp-wrap .vote').height($('.msp-wrap').height()-$('.msp-wrap h6').height());
     });
 
+    // Set style for matches
+    $('.msp-wrap .match div').each(function() {
+        // Set the style, it will take 2 seconds to load up the match percentage
+        $(this).attr('style',$(this).attr('data-style'));
+        // Get span that contains the percentage and get the number only
+        var this_span = $(this).parent().find('span');
+        var match = this_span.text().split('%');
+        match = parseInt(match[0]);
+
+        this_span.text('');
+
+        // Count how long it should take to count up
+        var how_long = 2000/match;
+
+        // Count up variable
+        var j = 0;
+        // Count up the matches
+        for(var i = 0; i <= match; i++) {
+
+            setTimeout(function() {
+                this_span.text((j++) + "% match");
+            },i*how_long);
+        }
+
+    });
+
     // Make a tr in a laws list a link
     $('.laws-table tr').click(function() {
         if($(this).data('href') !== undefined)
