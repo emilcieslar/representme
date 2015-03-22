@@ -120,10 +120,26 @@ def get_index_page(user, logged_in):
 
 def index(request):
 
+    # DEPRECATED
     #if request.user.is_authenticated():
         #return HttpResponseRedirect('/representME/user/'+request.user.username+'/')
 
-    if request.user.is_authenticated():
+    # Find out whether user is an MSP or not
+    msp_user = False
+    final_url = False
+    try:
+        msp_user = User.objects.get(username=request.user)
+        msp_userprofile = UserProfile.objects.get(user=msp_user)
+        if msp_userprofile.msptype:
+            final_url = msp_user.first_name.lower() + '-' + msp_user.last_name.lower()
+    except:
+        pass
+
+    # If it's the MSP who's logged in, go to the MSP page instead of user page
+    if msp_user:
+        return HttpResponseRedirect(reverse('msp', args=(final_url,)))
+
+    elif request.user.is_authenticated():
         return render(request,'representme/index-logged.html',get_index_page(request.user, True))
 
     return render(request,'representme/index.html', get_index_page(request.user, False))
