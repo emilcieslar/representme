@@ -591,7 +591,10 @@ def add_comment(request):
         try:
             # If comment_id is not false, we're editing
             if comment_id:
-                query = Comment.objects.get(id=int(comment_id))
+                # We're searching for a combination of ID and a user, which will ensure that even if
+                # a user passed the ID of the comment that he's not allowed to edit, the comment
+                # will not be edited
+                query = Comment.objects.get(id=int(comment_id), user=request.user)
                 query.text = text
                 query.save()
 

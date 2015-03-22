@@ -653,7 +653,8 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                 }
 
                 .vote-table .columns .col div {
-                    height: 45px;
+                    /* line-height should take care of height */
+                    _height: 45px;
                     width: 100%;
                     text-align: center;
                     background: #abd7f4;

@@ -85,6 +85,11 @@
                 text-align: center;
             }
 
+            .content-inner .content-inner-header .msp-page.tag {
+                width: 96%;
+                margin: 7px 2%;
+            }
+
             .content-inner .content-inner-header .right-side {
                 clear: both;
                 float: left;
@@ -108,6 +113,12 @@
 
     .textarea input[type=submit] {
         width: 10%;
+    }
+
+    .msp-page-img {
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 15px;
     }
 
 }

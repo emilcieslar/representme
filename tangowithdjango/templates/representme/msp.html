@@ -4,7 +4,7 @@
 
 {% block breadcrumbs_block %}
     <li><a href="{% url 'msps' %}">MSPs</a></li>
-    <li>{{ first_name }} {{ last_name }}</li>
+    <li>{{ msp.firstname }} {{ msp.lastname }}</li>
 {% endblock %}
 
 
@@ -15,7 +15,7 @@
         <div class="content-inner-header">
 
             <h2>{{ msp.firstname }} {{ msp.lastname }}</h2>
-            {% if is_my_msp %}<div class="tag">My MSP</div>{% endif %}
+            {% if is_my_msp %}<div class="tag msp-page">My MSP</div>{% endif %}
 
         </div><!-- .content-inner-header -->
 
@@ -23,24 +23,25 @@
 
             <div class="row">
                 <div class="large-3 medium-3 small-12 columns">
-                    <img src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg">
+                    <img class="msp-page-img" src="{% static "img/msps/" %}{{ msp.firstname }}{{ msp.lastname }}.jpg">
                 </div><!-- column holding a description of a law -->
 
                 <div class="large-8 medium-8 small-12 columns">
                     <div class="row vote-table">
-                        <div class="large-3 medium-3 small-12 columns">
+                        <div class="large-4 medium-4 small-12 columns">
                             <div class="col">
                                 <h4>Represents</h4>
                                 <div>{{ msp.constituency }}</div>
                             </div><!-- col -->
                         </div>
-                        <div class="large-3 medium-3 small-12 columns">
+                        <div class="large-4 medium-4 small-12 columns">
                             <div class="col">
                                 <h4>Member of</h4>
                                 <div>{{ msp.party }}</div>
                             </div><!-- col -->
                         </div>
-                        <div class="large-3 medium-3 small-12 columns">
+                        <!-- leave it here for future use, not in version 1 -->
+                        <!--<div class="large-3 medium-3 small-12 columns">
                             <div class="col">
                                 <h4>Position held</h4>
                                 {% if msp_positions %}
@@ -52,9 +53,9 @@
                                 {% else %}
                                     <div>None</div>
                                 {% endif %}
-                            </div><!-- col -->
-                        </div>
-                        <div class="large-3 medium-3 small-12 columns">
+                            </div>
+                        </div>-->
+                        <div class="large-4 medium-4 small-12 columns">
                             <div class="col">
                                 <h4>Present</h4>
                                 <div>{{ msp.presence }}</div>
