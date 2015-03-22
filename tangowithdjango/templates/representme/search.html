@@ -73,14 +73,14 @@
 
         {% for topic, laws in search_results_topics.items %}
             <li> {{ topic.name }}</li>
-            {% for law, law_excerpt, user_vote in laws %}
-                {{ law.name }} {{ law_excerpt }}
+            {% for law, law_excerpt, time in laws %}
+                {{ law.name }} {{ law_excerpt }} {{ time }}
                 <br>
             {% endfor %}
         {% endfor %}
 
-        {% for law, law_excerpt, user_vote in search_results_laws %}
-            <li> {{ law.name }} {{ law_excerpt }} </li>
+        {% for law, law_excerpt, time in search_results_laws %}
+            <li> {{ law.name }} {{ law_excerpt }} {{ time }} </li>
         {%  endfor %}
 
         {% for result in search_results_MSPs %}
