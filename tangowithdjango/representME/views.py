@@ -304,10 +304,10 @@ def search(request):
         #retrieve results for each query term
         for term in query_terms:
             for topic in topics.filter(name__icontains=term):
-                search_results_topics[topic] = [[law, law.text[:200], get_time_tag(law)] for law in
+                search_results_topics[topic] = [[law, law.text[:300], get_time_tag(law)] for law in
                                                 laws.filter(topic=topic)]
             for law in laws.filter(text__icontains=term):
-                entry = [law, law.text[:200], get_time_tag(law)]
+                entry = [law, law.text[:300], get_time_tag(law)]
                 if not entry in search_results_laws:
                     search_results_laws.append(entry)
             for msp in chain(msps.filter(firstname__icontains=term), msps.filter(lastname__icontains=term)):
