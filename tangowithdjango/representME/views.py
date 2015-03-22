@@ -570,11 +570,14 @@ def add_comment(request):
 
     law_id = None
     text = None
+    comment_id = False
 
     # If the request method is get, set law_id and vote
     if request.method == 'GET':
         law_id = request.GET['law_id']
         text = request.GET['text']
+        if request.GET['comment_id'] != "":
+            comment_id = request.GET['comment_id']
 
     # Get law object from database
     law = Law.objects.get(id=int(law_id))
@@ -585,28 +588,27 @@ def add_comment(request):
     # If law_id was set up correctly then we can suppose
     # that text was set up correct as well
     if law_id:
-        # Get the user vote if exists
-        #user_law_vote = UserVote.objects.filter(user=request.user, law=law)
-        # If it exists
-        #if user_law_vote:
-        #    # Set vote for whatever user voted
-        #    user_law_vote.voted_for = vote
-        #    # Save the model
-        #    user_law_vote.save()
-        #    # We were successful this time!
-        #    success = True
-        # Otherwise create a new vote
-        #else:
         try:
-            # Save the comment to the database
-            query = Comment(user=request.user, law=law, text=text)
-            query.save()
+            # If comment_id is not false, we're editing
+            if comment_id:
+                query = Comment.objects.get(id=int(comment_id))
+                query.text = text
+                query.save()
 
-            # Save a dictionary of data into output
-            # Here we have date, id of the comment and username
-            output = json.dumps({"date": query.time.strftime("%d/%m/%Y %H.%M"),
-                                 "id": query.id,
-                                 "username": request.user.username})
+                # We don't need to return anything back, just a message saying it was successful
+                return HttpResponse(True)
+
+            # Otherwise creating a new comment
+            else:
+                # Save the comment to the database
+                query = Comment(user=request.user, law=law, text=text)
+                query.save()
+
+                # Save a dictionary of data into output
+                # Here we have date, id of the comment and username
+                output = json.dumps({"date": query.time.strftime("%d/%m/%Y %H.%M"),
+                                     "id": query.id,
+                                     "username": request.user.username})
         except:
             pass
 

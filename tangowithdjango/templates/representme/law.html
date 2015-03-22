@@ -124,7 +124,6 @@
                 <form id="comment_form" method="post" action="/representME/add_comment/" data-lawid="{{ law.id }}" data-editid="">
                     {% csrf_token %}
                     {{ commentForm.text }}
-                    <!--<textarea name="comment-text" placeholder="Add your message here..."></textarea>-->
                     <input type="submit" name="send-comment" value="" />
                 </form>
             </div><!-- .textarea -->
@@ -135,8 +134,7 @@
 
                         <div class="latest-law" data-userid="{{ comment.user }}">
                             <h3>{{ comment.user }} &nbsp;&nbsp;<span>{{ comment.time|date:"d/m/Y - H.i" }}</span>{% if comment.user == user %} &nbsp;&nbsp;<span class="edit-comment" data-commentid="{{ comment.id }}">Edit</span>{% endif %}</h3>
-
-                            <p>{{ comment.text|linebreaks }}</p>
+                            <p>{{ comment.text|linebreaksbr }}</p>
                         </div><!-- .latest-law -->
 
                     {% endfor %}

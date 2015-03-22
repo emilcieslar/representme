@@ -77,10 +77,15 @@ $(document).ready(function() {
 
     // Edit a comment
     ////////////////////////////////
-    $('.edit-comment').click(function() {
+    // We have to use on() here, because
+    // there is a possibility we click on
+    // elements that have been added without
+    // loading the page
+    $(document).on('click','.edit-comment', function() {
 
-        // Get the comment text
-        var text = $(this).parent().parent().find('p').text();
+        // Find the text in the comment and replace new lines
+        var text = $(this).parent().parent().find('p').html().replace(/<br>/g,"\n");
+
         // Place the text to the textarea
         $('#comment_form textarea').val(text);
         // Change data-editid to the id of the comment
@@ -100,22 +105,44 @@ $(document).ready(function() {
         // Stop from default behaviour (sending a form using POST request)
         e.preventDefault();
 
-        var text;
-        text = $.trim($('#comment_form textarea').val());
+        var text = $.trim($('#comment_form textarea').val());
 
-        var law_id;
-        law_id = $('#comment_form').attr('data-lawid');
+        var law_id = $('#comment_form').attr('data-lawid');
+
+        var comment_id = $('#comment_form').attr('data-editid');
 
         // If the comment is not empty
         if(text.length != 0) {
 
             // Post comment to the view and wait for the answer
-            $.get('/representME/add_comment/', {text: text, law_id: law_id}, function(data){
-                // If we were successful during the process of adding user vote to database
-                if(data != "False") {
+            $.get('/representME/add_comment/', {text: text, law_id: law_id, comment_id: comment_id}, function(data){
+
+                // First we need to check if we were editing an existing comment
+                if(data == "True") {
+
+                    // Set a comment text
+                    var final_comment = $('#comment_form textarea').val().replace(/\n/g, '<br>');
+
+                    // Find an element we want to edit
+                    var comment_edit = $('span[data-commentid=' + comment_id + ']').parent().parent();
+                    // Remove it
+                    comment_edit.find('p').remove();
+
+                    // Add a comment to the element
+                    comment_edit.append('<p>' + final_comment + '</p>');
+
+                    // Clear the text in the comment text field
+                    $('#comment_form textarea').val('');
 
                     // Empty data-editid in comment form
                     $('#comment_form').attr('data-editid','');
+
+                    // Scroll down to the edited comment
+                    $("html, body").animate({ scrollTop: $('span[data-commentid=' + comment_id + ']').offset().top }, 500);
+
+                } else
+                // If we were successful during the process of adding user vote to database
+                if(data != "False") {
 
                     // If we're adding first comment
                     if($(".no-comments").length != 0) {
@@ -123,15 +150,14 @@ $(document).ready(function() {
                     }
 
                     // Add the comment to the wrapper
-                    // TODO: Return a user name in the json query as well
-                    $('#comments-wrapper').prepend('<div data-userid="" class="latest-law" style="display: none"><h3>' + data['username'] + ' &nbsp;&nbsp;<span>' + data['date'] + '</span> &nbsp;&nbsp;<span class="edit-comment" data-commentid="' + data['id'] + '">Edit</span></h3><p>' + text + '</p></div><!-- .latest-law -->');
+                    $('#comments-wrapper').prepend('<div data-userid="" class="latest-law" style="display: none"><h3>' + data['username'] + ' &nbsp;&nbsp;<span>' + data['date'] + '</span> &nbsp;&nbsp;<span class="edit-comment" data-commentid="' + data['id'] + '">Edit</span></h3><p>' + text.replace(/\n/g, '<br>') + '</p></div><!-- .latest-law -->');
                     // After the HTML is added, display it nicely
                     $('#comments-wrapper .latest-law').fadeIn('slow');
 
                     // Increase commends number
                     $('#comments_number').text(parseInt($('#comments_number').text())+1);
 
-                    // Clear the text in the commend text field
+                    // Clear the text in the comment text field
                     $('#comment_form textarea').val('');
 
                 }
