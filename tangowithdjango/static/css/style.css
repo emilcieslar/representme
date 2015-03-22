@@ -459,6 +459,12 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
     background: rgba(255,255,255,.5);
 }
 
+    .main-content h2.topic {
+        margin: 5% 2% 0 2%;
+        color: #292929;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: bold;
+    }
 
     .breadcrumbs-wrapper {
         width: 100%;

@@ -13,7 +13,7 @@
 {% block body_block %}
 
     {% for topic, laws in search_results_topics.items %}
-        <h1> {{ topic.name }}</h1>
+        <h2 class="topic">{{ topic.name }}</h2>
 
     {% for law, law_excerpt, time in laws %}
 
@@ -73,9 +73,7 @@
             {% endfor %}
         {% endfor %}
 
-        {% for law, law_excerpt, time in search_results_laws %}
-            <li> {{ law.name }} {{ law_excerpt }} {{ time }} </li>
-        {%  endfor %}
+        <br /><br />
 
         {% for result in search_results_MSPs %}
         <li> {{ result.firstname }} {{ result.lastname }}</li>
