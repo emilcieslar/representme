@@ -173,6 +173,7 @@ def msp(request, msp_name):
     """
     names = msp_name.split('-')
     context_dict = {}
+    this_user_object = None
     try:
         #try to retrieve MSP with matching first and last name
         msp = MSP.objects.get(firstname__iexact=names[0], lastname__iexact=names[1])
@@ -185,6 +186,7 @@ def msp(request, msp_name):
         user_msps = []
         if request.user.is_authenticated():
             this_user = UserProfile.objects.get(user=request.user)
+            this_user_object = request.user
             user_msps = get_msps(this_user.postcode)
 
         # as a default, the MSP is not user's MSP:
@@ -195,7 +197,7 @@ def msp(request, msp_name):
         # Go over the dictionary of user_msps and check whether one of the msps is equal to this msp
         if msp in user_msps and len(user_msps) > 0:
             context_dict['is_my_msp'] = True
-            context_dict['match'] = computeMatch(this_user, msp)
+            context_dict['match'] = computeMatch(this_user_object, msp)
 
         # get laws msp has voted on + excerpts
         laws = []
