@@ -501,6 +501,10 @@ def user_login(request):
     """
     :return:
     """
+
+    # Define a url where a user came from
+    next_url = request.META.get('HTTP_REFERER')
+
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
         # Gather the username and password provided by the user.
@@ -522,23 +526,21 @@ def user_login(request):
             # Is the account active? It could have been disabled.
             if user.is_active:
                 # If the account is valid and active, we can log the user in.
-                # We'll send the user back to the homepage.
+                # We'll send the user to the page where user came from.
                 login(request, user)
-                return HttpResponseRedirect(reverse('index'))
+                return HttpResponseRedirect(next_url)
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponseRedirect(reverse('index') + '#login-disabled')
+                return HttpResponseRedirect(next_url + '#login-disabled')
         else:
             # Bad login details were provided. So we can't log the user in.
             print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponseRedirect(reverse('index') + '#login-invalid')
+            return HttpResponseRedirect(next_url + '#login-invalid')
 
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.
     else:
-        # No context variables to pass to the template system, hence the
-        # blank dictionary object...
-        return render(request, '/representme/#login', {})
+        return HttpResponseRedirect(next_url + '#login')
 
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
@@ -669,6 +671,7 @@ def add_comment(request):
     law_id = None
     text = None
     comment_id = False
+    law = None
 
     # If the request method is get, set law_id and vote
     if request.method == 'GET':
@@ -677,8 +680,11 @@ def add_comment(request):
         if request.GET['comment_id'] != "":
             comment_id = request.GET['comment_id']
 
-    # Get law object from database
-    law = Law.objects.get(id=int(law_id))
+    try:
+        # Get law object from database
+        law = Law.objects.get(id=int(law_id))
+    except:
+        return HttpResponse(False)
 
     # If something goes bad, we don't wanna update the HTML
     output = False

@@ -74,11 +74,18 @@
                             </div><!-- col -->
                         </div>
                     </div><!-- row holding a table -->
-                    <div>
-                        {% if is_this_msp %}
-                            {{ score }}
-                        {% endif %}
-                    </div>
+
+                    {% if is_this_msp %}
+                    <div class="row vote-table">
+                        <div class="large-12 medium-12 small-12 columns">
+                            <div class="col">
+                                <h4>How well represents</h4>
+                                <div>{{ score }}%</div>
+                            </div><!-- col -->
+                        </div>
+                    </div><!-- row holding a table -->
+                    {% endif %}
+
                 </div><!-- column holding a table -->
             </div><!-- row holding a description and a table -->
 
