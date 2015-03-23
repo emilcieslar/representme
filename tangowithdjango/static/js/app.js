@@ -36,7 +36,7 @@ $(document).ready(function() {
         // Set the style, it will take 2 seconds to load up the match percentage
         $(this).attr('style',$(this).attr('data-style'));
         // Get span that contains the percentage and get the number only
-        var this_span = $(this).parent().find('span');
+        var this_span = $(this).parent().find('span.span-match');
         var match = this_span.text().split('%');
         match = parseInt(match[0]);
 

@@ -709,6 +709,11 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                 margin: 0;
             }
 
+            .msp-wrap.about-page {
+                padding: 10px;
+                margin: 0;
+            }
+
                 .msp-wrap h6 {
                     height: 45px;
                     width: 100%;

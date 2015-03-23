@@ -38,7 +38,7 @@
             <ul class="menu">
                 <li><a href="{% url 'laws' %}" class="link">Laws</a></li>
                 <li><a href="{% url 'msps' %}" class="link">MSPs</a></li>
-                <li><a href="/about/" class="link">About</a></li>
+                <li><a href="{% url 'about' %}" class="link">About</a></li>
                 <li class="login-menu">
                     <div class="login-link">{% if user.is_authenticated %}{{ user.username }}{% else %}Login{% endif %}</div>
                     <div class="login-form">

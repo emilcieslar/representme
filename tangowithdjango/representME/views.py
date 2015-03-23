@@ -646,3 +646,10 @@ def add_comment(request):
         else:
             return HttpResponse(output)
 
+def about(request):
+    """
+    :return: The context for the about page
+    """
+
+
+    return render(request, 'representme/about.html')
