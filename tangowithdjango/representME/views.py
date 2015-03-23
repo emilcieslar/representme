@@ -209,7 +209,7 @@ def msp(request, msp_name):
             # default, in case sth fails
             if request.user.is_authenticated():
                 try:
-                    user_votes = UserVote.objects.filter(user=this_user)
+                    user_votes = UserVote.objects.filter(user=request.user)
                 except UserVote.DoesNotExist:
                     pass
             for vote in MSP_votes:
