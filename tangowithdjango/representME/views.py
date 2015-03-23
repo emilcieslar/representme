@@ -181,13 +181,26 @@ def msp(request, msp_name):
         # Add MSP object to dictionary
         context_dict['msp'] = msp
 
+        # default users
+        context_dict['is_msp'] = False
+        context_dict['is_this_msp'] = False
+
         # If user is logged in, we want to check whether this MSP is one of his/her MSPs
         # therefore we need a dictionary of user msps
         user_msps = []
         if request.user.is_authenticated():
-            this_user = UserProfile.objects.get(user=request.user)
             this_user_object = request.user
+            this_user = UserProfile.objects.get(user=this_user_object)
+            this_user_names = User.objects.get(username=this_user_object)
             user_msps = get_msps(this_user.postcode)
+            # check if this guy is an msp, and more specifically this msp
+            print this_user.msptype
+            print this_user_names.first_name
+            print this_user_names.last_name
+            if this_user.msptype:
+                context_dict['is_msp'] = True
+                if this_user_names.first_name == msp.firstname and this_user_names.last_name == msp.lastname:
+                    context_dict['is_this_msp'] = True
 
         # as a default, the MSP is not user's MSP:
         context_dict['is_my_msp'] = False
