@@ -1,6 +1,18 @@
 /* MEDIUM DEVICES STYLES */
 @media only screen and (min-width: 40.063em) and (max-width: 64em) {
 
+    .main-motto {
+        font-size: 54px;
+        line-height: 70px;
+    }
 
+    .are-you-msp a {
+        font-size: 18px;
+        width: 95%;
+    }
+
+    .are-you-msp span {
+        font-size: 30px;
+    }
 
 }
