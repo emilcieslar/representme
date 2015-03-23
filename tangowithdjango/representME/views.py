@@ -210,8 +210,8 @@ def msp(request, msp_name):
                         except:  # no postcode
                             pass
                     if len(this_msp_users) > 0:
-                        context_dict['score'] = sum([computeMatch(user, msp) for user in this_msp_users]) / len(
-                            this_msp_users)
+                        context_dict['score'] = round(sum([computeMatch(user, msp) for user in this_msp_users]) / len(
+                            this_msp_users), 2)
 
 
         # as a default, the MSP is not user's MSP:
