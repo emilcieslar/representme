@@ -339,6 +339,13 @@ def search(request):
                 if not msp in search_results_MSPs:
                     search_results_MSPs.append(msp)
 
+        # if query is a postcode, but EXACTLY a postcode
+        postcode_msps = get_msps(query_string)
+        if len(postcode_msps) > 1:
+            for msp in postcode_msps:
+                if not msp in search_results_MSPs:
+                    search_results_MSPs.append(msp)
+
         context_dict = {'search_results_topics': search_results_topics, 'search_results_MSPs': search_results_MSPs,
                         'query_string': query_string}
 
