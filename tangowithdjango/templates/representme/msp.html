@@ -15,7 +15,9 @@
         <div class="content-inner-header">
 
             <h2>{{ msp.firstname }} {{ msp.lastname }}</h2>
-            {% if is_my_msp %}<div class="tag msp-page">My MSP</div>{% endif %}
+
+            {% if not is_msp %}{% if is_my_msp %}
+                <div class="tag msp-page">My MSP</div>{% endif %}{% endif %}
 
         </div><!-- .content-inner-header -->
 
