@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 
 from representME.models import UserProfile, Comment
 
+from localflavor.gb.forms import GBPostcodeField
+
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), label="", help_text="")
@@ -17,7 +19,7 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    postcode = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Postcode'}), label="", help_text="")
+    postcode = GBPostcodeField(widget=forms.TextInput(attrs={'placeholder': 'Postcode'}), label="", help_text="")
 
     class Meta:
         model = UserProfile
