@@ -16,8 +16,8 @@ from representME.forms import UserForm, UserProfileForm, LawCommentForm
 
 # For the reverse() functionality
 from django.core.urlresolvers import reverse
+
 from django.http import HttpResponseRedirect
-# from representME.search import generic_search
 from itertools import chain
 
 
@@ -136,13 +136,19 @@ def get_index_page(user, logged_in):
 
 def index(request):
     """
-    :return: Sets the context for the not logged in index page
+    :return: Sets the context for the not logged in OR logged in index page
     """
+
+    # Try getting a user from database
     final_url = False
     try:
+        # If user is logged in, we can get a user from DB
         msp_user = User.objects.get(username=request.user)
+        # Get UserProfile from database
         msp_userprofile = UserProfile.objects.get(user=msp_user)
+        # If user is MSP
         if msp_userprofile.msptype:
+            # Set URL to which will be MSP user redirected (based on his first and last name
             final_url = msp_user.first_name.lower() + '-' + msp_user.last_name.lower()
     except:
         pass
@@ -151,9 +157,12 @@ def index(request):
     if final_url:
         return HttpResponseRedirect(reverse('msp', args=(final_url,)))
 
+    # If it's the logged in user go to the logged in index and in context dictionary return data for
+    # logged in index page
     elif request.user.is_authenticated():
         return render(request, 'representme/index-logged.html', get_index_page(request.user, True))
 
+    # If the user is not logged in, just render basic index for not logged in user
     return render(request, 'representme/index.html', get_index_page(request.user, False))
 
 
@@ -168,17 +177,22 @@ def msp(request, msp_name):
         #try to retrieve MSP with matching first and last name
         msp = MSP.objects.get(firstname__iexact=names[0], lastname__iexact=names[1])
 
+        # Add MSP object to dictionary
         context_dict['msp'] = msp
 
+        # If user is logged in, we want to check whether this MSP is one of his/her MSPs
+        # therefore we need a dictionary of user msps
         user_msps = []
         if request.user.is_authenticated():
             this_user = UserProfile.objects.get(user=request.user)
             user_msps = get_msps(this_user.postcode)
 
-        # default:
+        # as a default, the MSP is not user's MSP:
         context_dict['is_my_msp'] = False
+        # if it's not user's MSP, default for match is 0
         context_dict['match'] = 0
 
+        # Go over the dictionary of user_msps and check whether one of the msps is equal to this msp
         if msp in user_msps and len(user_msps) > 0:
             context_dict['is_my_msp'] = True
             context_dict['match'] = computeMatch(this_user, msp)
@@ -233,19 +247,30 @@ def law(request, law_name):
     :return: The context for the individual law page
     """
     context_dict = {}
+    # In case user is not logged in, this is the default
     this_user_object = None
+
+    # Try getting a law from database
     try:
         law = Law.objects.get(name=law_name)
+        # Try getting all comments associated with the law
         comments = Comment.objects.order_by('-time').filter(law=law)
+        # Get how many user votes are there for the law
         votes = UserVote.objects.filter(law=law)
+        # Users voted for
         context_dict['votes_for'] = votes.filter(vote=True).count()
+        # Users voted against
         context_dict['votes_against'] = votes.filter(vote=False).count()
         context_dict['law'] = law
+        # Set whether a law is upcoming or past
         context_dict['upcoming'] = get_time_tag(law)
+        # Create a comment form
         context_dict['commentForm'] = LawCommentForm()
+        # Load up comments
         context_dict['comments'] = comments
         context_dict['comments_number'] = comments.count()
 
+        # Get user MSPs if user is logged in
         user_msps = []
         if request.user.is_authenticated():
             this_user = UserProfile.objects.get(user=request.user)
@@ -261,12 +286,13 @@ def law(request, law_name):
                 msp_vote = ''
             user_msps_results.append([msp, msp_vote])
 
-        # might get error in templates if db is not complete and an MSP vote is ''
+        # TODO: might get error in templates if db is not complete and an MSP vote is ''
         # delete this and the print once it is tested
         print user_msps_results
 
         context_dict['user_msps'] = user_msps_results
 
+        # Get user vote if user voted
         context_dict['user_vote'] = ''
         try:
             context_dict['user_vote'] = UserVote.objects.get(user=this_user_object, law=law)
