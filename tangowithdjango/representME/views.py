@@ -297,12 +297,26 @@ def law(request, law_name):
         context_dict['comments'] = comments
         context_dict['comments_number'] = comments.count()
 
+        # default MSP type
+        context_dict['is_msp'] = False
         # Get user MSPs if user is logged in
         user_msps = []
         if request.user.is_authenticated():
-            this_user = UserProfile.objects.get(user=request.user)
             this_user_object = request.user
+            this_user = UserProfile.objects.get(user=this_user_object)
+            this_user_names = User.objects.get(username=this_user_object)
             user_msps = get_msps(this_user.postcode)
+            if this_user.msptype:
+                context_dict['is_msp'] = True
+                context_dict['vote'] = MSPVote.ABSENT
+                try:
+                    msp = MSP.objects.get(firstname=this_user_names.first_name, lastname=this_user_names.last_name)
+                    try:
+                        context_dict['vote'] = MSPVote.objects.get(msp=msp, law=law)
+                    except MSPVote.DoesNotExist:
+                        pass
+                except MSP.DoesNotExist:
+                    pass
 
         user_msps_results = []
         # for each of those user_msps get the vote for this law and add the pair to the dictionary to be returned

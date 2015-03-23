@@ -20,7 +20,7 @@
             <div class="tag upcoming">{{ upcoming }}</div>
 
             <div class="right-side" data-lawid="{{ law.id }}">
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated and not is_msp %}
                     {% if user_vote|lower == 'true' or user_vote|lower == 'false' %}
                         <div class="against number">{{ votes_against }}</div>
                         <div class="approve number">{{ votes_for }}</div>
@@ -48,7 +48,13 @@
                             <div class="col">
                                 {% if user.is_authenticated %}
                                     <h4>Your vote</h4>
-                                    <div class="your-vote{% if user_vote|lower == 'true' %} yes{% elif user_vote|lower == 'false' %}  no {% endif %}">&nbsp;</div>
+                                    {% if is_msp %}
+                                        <div class="your-vote {% if vote.vote == '1' %}yes{% elif vote.vote == '2' %}no{% endif %}">
+                                            &nbsp;</div>
+                                    {% else %}
+                                        <div class="your-vote{% if user_vote|lower == 'true' %} yes{% elif user_vote|lower == 'false' %}  no {% endif %}">
+                                            &nbsp;</div>
+                                    {% endif %}
                                 {% else %}
                                     <h4>Log in to vote</h4>
                                     <div class="your-vote"></div>
@@ -80,7 +86,7 @@
 
             <div class="row my-msp-vote">
                 <div class="large-12 medium-12 small-12 columns">
-                    {% if user_msps %}
+                    {% if user_msps and not is_msp %}
                         {% for msp, msp_vote in user_msps %}
 
                             <div class="large-3 medium-3 small-6 columns">
