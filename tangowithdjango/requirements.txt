@@ -1,4 +1,5 @@
 Django==1.7
+django-localflavor==1.1
 Pillow==2.7.0
 python-dateutil==2.4.1
 requests==2.5.3
