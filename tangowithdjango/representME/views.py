@@ -500,7 +500,7 @@ def register(request):
             # Now we hash the password with the set_password method.
             # Once hashed, we can update the user object.
             user.set_password(user.password)
-            #user.save()
+            user.save()
 
             # Now sort out the UserProfile instance.
             # Since we need to set the user attribute ourselves, we set commit=False.
@@ -509,7 +509,7 @@ def register(request):
             profile.user = user
 
             # Now we save the UserProfile model instance.
-            #profile.save()
+            profile.save()
 
             new_user = authenticate(username=user.username, password=password)
 
