@@ -184,6 +184,7 @@ def msp(request, msp_name):
         # default users
         context_dict['is_msp'] = False
         context_dict['is_this_msp'] = False
+        context_dict['score'] = -1
 
         # If user is logged in, we want to check whether this MSP is one of his/her MSPs
         # therefore we need a dictionary of user msps
@@ -194,13 +195,24 @@ def msp(request, msp_name):
             this_user_names = User.objects.get(username=this_user_object)
             user_msps = get_msps(this_user.postcode)
             # check if this guy is an msp, and more specifically this msp
-            print this_user.msptype
-            print this_user_names.first_name
-            print this_user_names.last_name
             if this_user.msptype:
                 context_dict['is_msp'] = True
                 if this_user_names.first_name == msp.firstname and this_user_names.last_name == msp.lastname:
                     context_dict['is_this_msp'] = True
+                    # this needs to be rewritten
+                    all_users = User.objects.all()
+                    this_msp_users = []
+                    for user in all_users:
+                        try:
+                            user_profile = UserProfile.objects.get(user=user)
+                            if msp in get_msps(user_profile.postcode):
+                                this_msp_users.append(user)
+                        except:  # no postcode
+                            pass
+                    if len(this_msp_users) > 0:
+                        context_dict['score'] = sum([computeMatch(user, msp) for user in this_msp_users]) / len(
+                            this_msp_users)
+
 
         # as a default, the MSP is not user's MSP:
         context_dict['is_my_msp'] = False
