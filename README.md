@@ -28,6 +28,7 @@ INSTALLATION GUIDE (assuming you have unix based command line):
    `python Populate/Populate_from scraper.py`
    
    5.1. However, if you are on unix based system, you will get errors therefore follow this simple fix:
+        
         Copy Populate_from scaper.py to the base directory
         
         `cp Populate/Populate_from scraper.py Populate_from scraper.py`
