@@ -2,7 +2,7 @@
 University of Glasgow ITECH team project
 
 
-INSTALLATION GUIDE (assuming you have unix based command line):
+## INSTALLATION GUIDE (assuming you have unix based command line):
 
 1. **Open up command line**
 2. **Clone the project to your directory**
