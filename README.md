@@ -33,14 +33,14 @@ INSTALLATION GUIDE (assuming you have unix based command line):
    
    Copy Populate_from scaper.py to the base directory
         
-        `cp Populate/Populate_from\ scraper.py Populate_from\ scraper.py`
+   `cp Populate/Populate_from\ scraper.py Populate_from\ scraper.py`
         
    As well as data.py
         
-        `cp Populate/data.py data.py`
+   `cp Populate/data.py data.py`
         
    Then run Populate_from scraper.py from your base directory
         
-        `python Populate_from\ scraper.py`
+   `python Populate_from\ scraper.py`
    
 6. You are good to go
