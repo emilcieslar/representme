@@ -84,7 +84,7 @@ def get_votes(parsing_law, law, type, result):
                         pass
 
 
-@transaction.transaction.commit_manually
+#@transaction.transaction.commit_manually (doesn't work on unix)
 def populate_law(files_location, startdate, enddate):
     """
     reads all files within an interval from a location
