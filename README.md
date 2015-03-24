@@ -50,5 +50,11 @@ University of Glasgow ITECH team project
    And open up your browser with address http://127.0.0.1/representME/
    
 ### ADDITIONAL TO INSTALL:
+Population script creates MSPs and Laws, not users. If you want to create a superuser, follow this link: [create superuser](http://www.tangowithdjango.com/book17/chapters/models.html#setup-database-and-create-superuser)
 
+If you want to create normal user, just register.
+
+If you want to create an MSP user, register as usual and then go to the /admin/ (log in as a superuser) where you have to set firstname and lastname exactly the same as the chosen MSP.
+
+**HAVE FUN**
 
