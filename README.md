@@ -44,3 +44,7 @@ University of Glasgow ITECH team project
    `python Populate_from\ scraper.py`
    
 7. **You are good to go!**
+
+   `python manage.py runserver`
+   
+   And open up your browser with address http://127.0.0.1/representME/
