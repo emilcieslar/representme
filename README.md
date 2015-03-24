@@ -9,7 +9,11 @@ INSTALLATION GUIDE (assuming you have unix based command line):
 
    `git clone https://github.com/emilcieslar/tangowithdjango.git`
    
-3. Install requirements.txt to your virtual environment 
+3. Go to the tangowithdjango/tangowithdjango folder
+
+   `cd tangowithdjango/tangowithdjango/`
+
+3. Install requirements.txt to your new virtual environment 
    
    If you don't know how to use virtual environments, refer to this url: [tangowithdjango](http://www.tangowithdjango.com/book17/chapters/requirements.html#virtual-environments)
 
