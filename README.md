@@ -23,6 +23,8 @@ INSTALLATION GUIDE (assuming you have unix based command line):
    
    `python manage.py makemigrations representME`
 
+   `python manage.py migrate`
+
 5. Run Populate/Populate_from scraper.py in order to create some data
 
    `python Populate/Populate_from\ scraper.py`
