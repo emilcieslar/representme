@@ -242,6 +242,6 @@ $(document).ready(function() {
 
     // Set first item in accordion as active
     $('.accordion .accordion-navigation:first-child').addClass('active');
-    $('.accordion .accordion-navigation:first-child div.content-inner').addClass('active');
+    $('.accordion .accordion-navigation:first-child div.content').addClass('active');
 
 });
